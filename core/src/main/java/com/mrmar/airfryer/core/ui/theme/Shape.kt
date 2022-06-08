@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.ui.theme
+package com.mrmar.airfryer.core.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

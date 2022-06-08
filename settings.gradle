@@ -16,3 +16,4 @@ rootProject.name = "airfryer"
 include ':app'
 include 'core'
 include ':login'
+include ':navigation'

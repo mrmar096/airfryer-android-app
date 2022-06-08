@@ -1,13 +1,12 @@
-package com.mrmar.airfryer.detail
+package com.mrmar.airfryer.navigation.routes
 
 import androidx.navigation.*
-import com.mrmar.airfryer.core.presentation.navigator.Route
-import com.mrmar.airfryer.main.MainRoute
+import com.mrmar.airfryer.core.presentation.router.routes.Route
 
-class DetailRoute(private val params: String) : Route<String> {
+class LoginRoute(private val params: String) : Route {
     companion object {
         private const val TEXT_PARAM = "text"
-        const val URI = "detail/{text}"
+        const val URI = "login/{text}"
 
         fun getArguments(): List<NamedNavArgument> = listOf(
             navArgument(TEXT_PARAM) { type = NavType.StringType }
@@ -18,13 +17,13 @@ class DetailRoute(private val params: String) : Route<String> {
         }
     }
 
-    override fun getFilledUri(): String {
-        return "detail/$params"
+    override fun getUriData(): String {
+        return "login/$params"
     }
 
     override fun buildOptions(): NavOptions {
         return NavOptions.Builder().apply {
-            setPopUpTo(MainRoute.getFilledUri(), false)
+            setPopUpTo(MainRoute.getUriData(), false)
         }.build()
     }
 
