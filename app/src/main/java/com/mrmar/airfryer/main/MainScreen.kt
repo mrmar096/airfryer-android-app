@@ -16,11 +16,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mrmar.airfryer.core.presentation.router.Router
+import com.mrmar.airfryer.core.presentation.router.routes.BackRoute
 import com.mrmar.airfryer.core.ui.theme.AirfryerTheme
 import com.mrmar.airfryer.login.presentation.route.LoginRouteGraph
 import com.mrmar.airfryer.main.viewmodel.MainViewModel
-import com.mrmar.airfryer.core.presentation.router.Router
-import com.mrmar.airfryer.core.presentation.router.routes.BackRoute
+import com.mrmar.airfryer.main.viewmodel.contract.MainContract
 import com.mrmar.airfryer.navigation.routes.MainRoute
 
 @Composable
@@ -62,8 +63,8 @@ fun MainContent() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Button(onClick = { mainViewModel.navigate() }) {
-                Text("Navigate to Detail")
+            Button(onClick = { mainViewModel.setEvent(MainContract.Event.Login) }) {
+                Text("Navigate to Login")
             }
         }
     }

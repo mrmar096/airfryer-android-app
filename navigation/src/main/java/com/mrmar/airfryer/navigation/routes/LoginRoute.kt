@@ -1,6 +1,10 @@
 package com.mrmar.airfryer.navigation.routes
 
-import androidx.navigation.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavOptions
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.mrmar.airfryer.core.presentation.router.routes.Route
 
 class LoginRoute(private val params: String) : Route {
@@ -12,8 +16,9 @@ class LoginRoute(private val params: String) : Route {
             navArgument(TEXT_PARAM) { type = NavType.StringType }
         )
 
-        fun resolveArguments(stackEntry: NavBackStackEntry): String {
-            return stackEntry.arguments?.getString(TEXT_PARAM).orEmpty()
+        fun resolveArguments(stateHandle: SavedStateHandle): String {
+            return (stateHandle.get<String>(TEXT_PARAM)
+                ?: throw IllegalStateException("No text was passed to destination."))
         }
     }
 
