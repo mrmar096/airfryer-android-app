@@ -1,0 +1,24 @@
+apply from: "$rootDir/gradle/components/android-module.gradle"
+apply from: "$rootDir/gradle/components/android-testing.gradle"
+
+android {
+    defaultConfig {
+        //API Manager
+        buildConfigField 'String', 'BASE_URL', '\"https://smartapi.vesync.com/cloud/v1/\"'
+        buildConfigField 'String', 'DB_NAME', '"airfryer-db"'
+    }
+}
+
+dependencies {
+    implementation project(':core')
+
+    //Networking
+    api "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    //Database
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+}

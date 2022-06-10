@@ -51,8 +51,9 @@ android {
 
 dependencies {
     implementation project(':core')
-    implementation project(':login')
+    implementation project(':data')
     implementation project(':navigation')
+    implementation project(':login')
 
     //DI
     implementation "com.google.dagger:hilt-android:$dagger_version"

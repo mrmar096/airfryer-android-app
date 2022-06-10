@@ -23,4 +23,6 @@ dependencies {
     api "androidx.navigation:navigation-compose:$nav_version"
     api "androidx.hilt:hilt-navigation-compose:$hilt_nav_version"
 
+    //Utils
+    api "com.jakewharton.timber:timber:4.7.1"
 }
