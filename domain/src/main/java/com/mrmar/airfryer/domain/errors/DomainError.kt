@@ -15,4 +15,10 @@ sealed class DomainError : Translatable {
             return resources.getString(R.string.no_internet_error)
         }
     }
+
+    object SessionExpired : DomainError() {
+        override fun getStringResource(resources: Resources): String {
+            return resources.getString(R.string.session_expired_error)
+        }
+    }
 }

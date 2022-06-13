@@ -47,7 +47,7 @@ internal abstract class BaseRepository {
         }
     }
 
-    protected open fun handleCodeErrors(code: Int, message: String): Throwable {
+    protected open suspend fun handleCodeErrors(code: Int, message: String): Throwable {
         return when (code) {
             ERROR_404 -> EndpointNotFoundException(code)
             else -> RepositoryException(code, message)

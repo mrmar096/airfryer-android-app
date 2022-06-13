@@ -13,7 +13,9 @@ class LoginRoute : Route {
     }
 
     override fun buildOptions(): NavOptions {
-        return NavOptions.Builder().build()
+        return NavOptions.Builder().apply {
+            setLaunchSingleTop(true)
+        }.build()
     }
 
 }

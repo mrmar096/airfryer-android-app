@@ -1,6 +1,6 @@
 package com.mrmar.airfryer.data.datasources.cloud.di
 
-import com.mrmar.airfryer.data.datasources.cloud.api.LoginApi
+import com.mrmar.airfryer.data.datasources.cloud.api.DeviceApi
 import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
 import com.mrmar.airfryer.data.repository.login.LoginRepositoryDefault
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
@@ -16,7 +16,7 @@ internal object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providesLoginRepository(api: LoginApi, dao: SessionContextDao): LoginRepository {
+    fun providesLoginRepository(api: DeviceApi, dao: SessionContextDao): LoginRepository {
         return LoginRepositoryDefault(api, dao)
     }
 }

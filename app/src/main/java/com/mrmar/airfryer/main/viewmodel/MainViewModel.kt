@@ -25,7 +25,8 @@ class MainViewModel @Inject constructor(
 
     private fun checkSession() {
         viewModelScope.launch(RepositoryCoroutineHandler(::handleError)) {
-            if (repository.isLoggedIn()) goToDashBoard() else goToLogin()
+            repository.checkUserSession()
+            goToDashBoard()
         }
     }
 

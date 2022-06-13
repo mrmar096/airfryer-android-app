@@ -18,7 +18,7 @@ internal data class CloudRequestModel(
     @SerializedName("deviceList")
     val deviceList: List<CloudRequestDevice>? = null,
     @SerializedName("method")
-    val method: String = "bypass",
+    val method: CloudRequestMethods,
     @SerializedName("phoneBrand")
     val phoneBrand: String = "Google Pixel 2XL",
     @SerializedName("phoneOS")

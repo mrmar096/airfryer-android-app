@@ -11,4 +11,12 @@ open class CloudResponseModel {
 
     @SerializedName("traceId")
     val traceId: String? = null
+
+    fun succeeded(): Boolean {
+        return code == 0
+    }
+
+    fun failed(): Boolean {
+        return !succeeded()
+    }
 }

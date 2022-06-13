@@ -14,6 +14,7 @@ import com.mrmar.airfryer.core.presentation.router.routes.BackRoute
 import com.mrmar.airfryer.core.ui.theme.AirfryerTheme
 import com.mrmar.airfryer.login.presentation.route.LoginRouteGraph
 import com.mrmar.airfryer.main.viewmodel.MainViewModel
+import com.mrmar.airfryer.navigation.routes.LoginRoute
 import com.mrmar.airfryer.navigation.routes.MainRoute
 
 @Composable
@@ -22,10 +23,17 @@ fun MainScreen(mainRouter: Router) {
         Surface(modifier = Modifier.fillMaxSize()) {
             val navController = rememberNavController()
             mainRouter.observeNavigation { route ->
-                if (route is BackRoute) {
-                    navController.popBackStack()
-                } else {
-                    navController.navigate(route.getUriData(), route.buildOptions())
+                when (route) {
+                    is BackRoute -> {
+                        navController.popBackStack()
+                    }
+                    is LoginRoute -> {
+                        navController.popBackStack()
+                        navController.navigate(route.getUriData(), route.buildOptions())
+                    }
+                    else -> {
+                        navController.navigate(route.getUriData(), route.buildOptions())
+                    }
                 }
             }
             NavHost(navController, startDestination = MainRoute.getUriData()) {
@@ -39,8 +47,9 @@ fun MainScreen(mainRouter: Router) {
 
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun MainContent() {
-    val mainViewModel = hiltViewModel<MainViewModel>()
+    val viewModel = hiltViewModel<MainViewModel>()
 }

@@ -1,7 +1,9 @@
 package com.mrmar.airfryer.data.datasources.local.dao.session
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
 
 @Dao
@@ -10,11 +12,11 @@ internal interface SessionContextDao {
     suspend fun getToken(): String?
 
     @Query("SELECT * FROM SessionContextEntity")
-    fun getSessionContext(): LiveData<SessionContextEntity?>
+    suspend fun getSessionContext(): SessionContextEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(sessionContext: SessionContextEntity)
+    suspend fun save(sessionContext: SessionContextEntity)
 
-    @Delete
-    fun delete(user: SessionContextEntity)
+    @Query("DELETE FROM SessionContextEntity")
+    suspend fun delete()
 }

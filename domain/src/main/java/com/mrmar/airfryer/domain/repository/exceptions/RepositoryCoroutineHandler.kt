@@ -13,8 +13,12 @@ class RepositoryCoroutineHandler(
     override fun handleException(context: CoroutineContext, exception: Throwable) {
         when (exception) {
             is NoConnectionException -> handler(DomainError.NoConnectionError)
+            is SessionExpiredException -> handler(DomainError.SessionExpired)
             is RepositoryException -> handler(DomainError.ServiceError)
-            else -> Logger.error("Repository Coroutine unmanaged error: \n ${exception.stackTraceToString()}")
+            else -> {
+                Logger.error("Repository Coroutine unmanaged error: \n ${exception.stackTraceToString()}")
+                handler(DomainError.ServiceError)
+            }
         }
     }
 }
