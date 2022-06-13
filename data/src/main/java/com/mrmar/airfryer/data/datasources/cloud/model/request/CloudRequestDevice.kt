@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.data.cloud.model.request
+package com.mrmar.airfryer.data.datasources.cloud.model.request
 
 import com.google.gson.annotations.SerializedName
 

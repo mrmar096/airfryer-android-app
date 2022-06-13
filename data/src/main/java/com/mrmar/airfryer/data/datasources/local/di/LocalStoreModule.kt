@@ -1,9 +1,9 @@
-package com.mrmar.airfryer.data.local.di
+package com.mrmar.airfryer.data.datasources.local.di
 
 import android.app.Application
 import androidx.room.Room
 import com.mrmar.airfryer.data.BuildConfig
-import com.mrmar.airfryer.data.local.database.AppDatabase
+import com.mrmar.airfryer.data.datasources.local.database.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.data.cloud.di
+package com.mrmar.airfryer.data.datasources.cloud.di
 
 import com.mrmar.airfryer.data.BuildConfig
 import com.mrmar.airfryer.data.BuildConfig.BASE_URL

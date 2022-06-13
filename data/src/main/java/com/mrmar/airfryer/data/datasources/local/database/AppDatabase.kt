@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.data.local.database
+package com.mrmar.airfryer.data.datasources.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

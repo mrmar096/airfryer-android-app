@@ -1,6 +1,6 @@
-package com.mrmar.airfryer.data.cloud.di
+package com.mrmar.airfryer.data.datasources.cloud.di
 
-import com.mrmar.airfryer.data.cloud.api.RetrofitApi
+import com.mrmar.airfryer.data.datasources.cloud.api.LoginApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ internal class ApiModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitApi(retrofit: Retrofit): RetrofitApi {
-        return retrofit.create(RetrofitApi::class.java)
+    fun provideRetrofitApi(retrofit: Retrofit): LoginApi {
+        return retrofit.create(LoginApi::class.java)
     }
 }

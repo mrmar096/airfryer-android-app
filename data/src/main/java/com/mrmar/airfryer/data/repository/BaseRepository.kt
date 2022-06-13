@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.data.cloud.repository
+package com.mrmar.airfryer.data.repository
 
 import com.mrmar.airfryer.core.utils.Logger
 import com.mrmar.airfryer.domain.repository.exceptions.EndpointNotFoundException
