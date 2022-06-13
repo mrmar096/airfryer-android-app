@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="generic_service_error">Ups! Something works wrong. Please try again later</string>
+</resources>
