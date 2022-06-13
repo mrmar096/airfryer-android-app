@@ -14,7 +14,7 @@ class RepositoryCoroutineHandler(
         when (exception) {
             is NoConnectionException -> handler(DomainError.NoConnectionError)
             is RepositoryException -> handler(DomainError.ServiceError)
-            else -> Logger.error("Repository Coroutine unmanaged error: \n ${exception.stackTrace}")
+            else -> Logger.error("Repository Coroutine unmanaged error: \n ${exception.stackTraceToString()}")
         }
     }
 }

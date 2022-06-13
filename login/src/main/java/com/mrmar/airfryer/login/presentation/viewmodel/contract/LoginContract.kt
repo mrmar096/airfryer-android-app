@@ -11,7 +11,6 @@ class LoginContract {
 
     data class State(
         override val isLoading: Boolean = false,
-        val text: String,
         val error: String? = null
     ) : ViewState {
         override fun getErrorMessage() = error

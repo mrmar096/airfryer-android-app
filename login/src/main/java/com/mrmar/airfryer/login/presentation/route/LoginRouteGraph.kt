@@ -9,13 +9,12 @@ import com.mrmar.airfryer.navigation.routes.LoginRoute
 
 object LoginRouteGraph : RouterGraph {
 
-    private const val LOGIN = "login"
+    private const val LOGIN = "login_graph"
 
     override fun build(graphBuilder: NavGraphBuilder) {
         graphBuilder.navigation(startDestination = LoginRoute.URI, LOGIN) {
             composable(
                 LoginRoute.URI,
-                LoginRoute.getArguments()
             ) {
                 LoginScreen()
             }
