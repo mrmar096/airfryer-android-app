@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="generic_service_error">Ups! Something works wrong. Please try again later</string>
+    <string name="generic_service_error">Ups! Something went wrong. Please try again later</string>
+    <string name="no_internet_error">Your internet connection is not stable. Please check this</string>
 </resources>

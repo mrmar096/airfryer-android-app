@@ -9,7 +9,10 @@ class MainContract {
         object Login : Event()
     }
 
-    object State : ViewState
+    object State : ViewState {
+        override val isLoading: Boolean
+            get() = false
+    }
 
     object Effect : ViewSideEffect
 }

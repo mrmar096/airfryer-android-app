@@ -10,4 +10,9 @@ sealed class DomainError : Translatable {
             return resources.getString(R.string.generic_service_error)
         }
     }
+    object NoConnectionError : DomainError() {
+        override fun getStringResource(resources: Resources): String {
+            return resources.getString(R.string.no_internet_error)
+        }
+    }
 }

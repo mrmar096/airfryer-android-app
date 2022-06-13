@@ -9,7 +9,13 @@ class LoginContract {
         data class UserLogin(val email: String, val password: String) : Event()
     }
 
-    data class State(val isLoading: Boolean = false, val text: String) : ViewState
+    data class State(
+        override val isLoading: Boolean = false,
+        val text: String,
+        val error: String? = null
+    ) : ViewState {
+        override fun getErrorMessage() = error
+    }
 
     sealed class Effect : ViewSideEffect {
 

@@ -2,7 +2,7 @@ package com.mrmar.airfryer.data.cloud.model.request
 
 import com.google.gson.annotations.SerializedName
 
-internal sealed class CloudRequestModel(
+internal data class CloudRequestModel(
     @SerializedName("acceptLanguage")
     val acceptLanguage: String = "es",
     @SerializedName("accountID")
@@ -10,11 +10,13 @@ internal sealed class CloudRequestModel(
     @SerializedName("appVersion")
     val appVersion: String = "VeSync 3.1.52 build9",
     @SerializedName("cid")
-    val cid: String?,
+    val cid: String? = null,
     @SerializedName("debugMode")
     val debugMode: Boolean = false,
     @SerializedName("jsonCmd")
-    val jsonCmd: CloudRequestCookCommand?,
+    val jsonCmd: CloudRequestCookCommand? = null,
+    @SerializedName("deviceList")
+    val deviceList: List<CloudRequestDevice>? = null,
     @SerializedName("method")
     val method: String = "bypass",
     @SerializedName("phoneBrand")

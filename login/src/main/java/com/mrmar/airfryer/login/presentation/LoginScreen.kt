@@ -3,15 +3,13 @@ package com.mrmar.airfryer.login.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mrmar.airfryer.core.presentation.composables.TopSnackbar
 import com.mrmar.airfryer.core.ui.theme.AirfryerTheme
 import com.mrmar.airfryer.login.presentation.viewmodel.LoginViewModel
 import com.mrmar.airfryer.login.presentation.viewmodel.contract.LoginContract
@@ -45,13 +43,21 @@ private fun LoginContent(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
+            state.getErrorMessage()?.let { TopSnackbar(message = it) }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
-                Text("Hello ${state.text} \n Is loading ${state.isLoading}")
-                Button(onClick = { onEventSent(LoginContract.Event.UserLogin("", "")) }) {
-                    Text("Navigate back")
+                if (state.isLoading) CircularProgressIndicator()
+                else Button(onClick = {
+                    onEventSent(
+                        LoginContract.Event.UserLogin(
+                            "",
+                            ""
+                        )
+                    )
+                }) {
+                    Text("Login")
                 }
             }
         }
