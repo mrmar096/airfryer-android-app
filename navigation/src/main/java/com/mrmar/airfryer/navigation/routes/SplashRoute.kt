@@ -3,9 +3,9 @@ package com.mrmar.airfryer.navigation.routes
 import androidx.navigation.NavOptions
 import com.mrmar.airfryer.core.presentation.router.routes.Route
 
-object MainRoute : Route {
+object SplashRoute : Route {
 
-    private const val URI = "main"
+    private const val URI = "splash"
 
     override fun getUriData(): String {
         return URI

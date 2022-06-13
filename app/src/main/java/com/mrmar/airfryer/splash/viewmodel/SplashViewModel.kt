@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.main.viewmodel
+package com.mrmar.airfryer.splash.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -7,17 +7,17 @@ import com.mrmar.airfryer.core.utils.Logger
 import com.mrmar.airfryer.domain.errors.DomainError
 import com.mrmar.airfryer.domain.repository.exceptions.RepositoryCoroutineHandler
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
-import com.mrmar.airfryer.main.viewmodel.contract.MainContract
 import com.mrmar.airfryer.navigation.routes.LoginRoute
+import com.mrmar.airfryer.splash.viewmodel.contract.SplashContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class SplashViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val repository: LoginRepository
-) : BaseViewModel<MainContract.Event, MainContract.State, MainContract.Effect>(stateHandle) {
+) : BaseViewModel<SplashContract.Event, SplashContract.State, SplashContract.Effect>(stateHandle) {
 
     init {
         checkSession()
@@ -30,9 +30,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    override fun setInitialState() = MainContract.State
+    override fun setInitialState() = SplashContract.State
 
-    override fun handleEvents(event: MainContract.Event) {
+    override fun handleEvents(event: SplashContract.Event) {
 
     }
 

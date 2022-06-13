@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.main
+package com.mrmar.airfryer.splash
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
@@ -13,12 +13,12 @@ import com.mrmar.airfryer.core.presentation.router.Router
 import com.mrmar.airfryer.core.presentation.router.routes.BackRoute
 import com.mrmar.airfryer.core.ui.theme.AirfryerTheme
 import com.mrmar.airfryer.login.presentation.route.LoginRouteGraph
-import com.mrmar.airfryer.main.viewmodel.MainViewModel
 import com.mrmar.airfryer.navigation.routes.LoginRoute
-import com.mrmar.airfryer.navigation.routes.MainRoute
+import com.mrmar.airfryer.navigation.routes.SplashRoute
+import com.mrmar.airfryer.splash.viewmodel.SplashViewModel
 
 @Composable
-fun MainScreen(mainRouter: Router) {
+fun SplashScreen(mainRouter: Router) {
     AirfryerTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             val navController = rememberNavController()
@@ -36,20 +36,19 @@ fun MainScreen(mainRouter: Router) {
                     }
                 }
             }
-            NavHost(navController, startDestination = MainRoute.getUriData()) {
-                composable(MainRoute.getUriData()) {
-                    MainContent()
+            NavHost(navController, startDestination = SplashRoute.getUriData()) {
+                composable(SplashRoute.getUriData()) {
+                    SplashContent()
                 }
                 LoginRouteGraph.build(this)
             }
         }
     }
-
 }
 
 
 @Preview(showBackground = true)
 @Composable
-fun MainContent() {
-    val viewModel = hiltViewModel<MainViewModel>()
+fun SplashContent() {
+    val viewModel = hiltViewModel<SplashViewModel>()
 }

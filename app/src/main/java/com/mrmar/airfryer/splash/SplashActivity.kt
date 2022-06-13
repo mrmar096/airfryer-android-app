@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.main
+package com.mrmar.airfryer.splash
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,14 +8,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class SplashActivity : ComponentActivity() {
     @Inject
     lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen(router)
+            SplashScreen(router)
         }
     }
 }
