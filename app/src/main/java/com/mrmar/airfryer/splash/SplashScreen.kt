@@ -1,54 +1,92 @@
 package com.mrmar.airfryer.splash
 
+import android.view.animation.OvershootInterpolator
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.mrmar.airfryer.AirfyerRouterCompose
+import com.mrmar.airfryer.R
 import com.mrmar.airfryer.core.presentation.router.Router
-import com.mrmar.airfryer.core.presentation.router.routes.BackRoute
 import com.mrmar.airfryer.core.ui.theme.AirfryerTheme
-import com.mrmar.airfryer.login.presentation.route.LoginRouteGraph
-import com.mrmar.airfryer.navigation.routes.LoginRoute
-import com.mrmar.airfryer.navigation.routes.SplashRoute
+import com.mrmar.airfryer.core.ui.theme.Purple500
+import com.mrmar.airfryer.core.ui.theme.Purple700
+import com.mrmar.airfryer.core.ui.theme.Teal200
 import com.mrmar.airfryer.splash.viewmodel.SplashViewModel
 
 @Composable
-fun SplashScreen(mainRouter: Router) {
+fun Splash(router: Router) {
     AirfryerTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
-            val navController = rememberNavController()
-            mainRouter.observeNavigation { route ->
-                when (route) {
-                    is BackRoute -> {
-                        navController.popBackStack()
-                    }
-                    is LoginRoute -> {
-                        navController.popBackStack()
-                        navController.navigate(route.getUriData(), route.buildOptions())
-                    }
-                    else -> {
-                        navController.navigate(route.getUriData(), route.buildOptions())
-                    }
-                }
-            }
-            NavHost(navController, startDestination = SplashRoute.getUriData()) {
-                composable(SplashRoute.getUriData()) {
-                    SplashContent()
-                }
-                LoginRouteGraph.build(this)
-            }
+            AirfyerRouterCompose(router = router)
         }
     }
 }
 
-
-@Preview(showBackground = true)
 @Composable
-fun SplashContent() {
-    val viewModel = hiltViewModel<SplashViewModel>()
+fun AnimationSplashContent(
+    scaleAnimation: Animatable<Float, AnimationVector1D>,
+    durationMillisAnimation: Int,
+) {
+
+    LaunchedEffect(key1 = true) {
+        scaleAnimation.animateTo(
+            targetValue = 0.5F,
+            animationSpec = infiniteRepeatable(
+                repeatMode = RepeatMode.Reverse,
+                animation = tween(
+                    durationMillis = durationMillisAnimation,
+                    easing = {
+                        OvershootInterpolator(3F).getInterpolation(it)
+                    }
+                )
+            )
+        )
+    }
+}
+
+@Composable
+fun SplashContent(
+    scaleAnimation: Animatable<Float, AnimationVector1D>
+) {
+    hiltViewModel<SplashViewModel>()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Teal200,
+                        Purple500,
+                        Purple700,
+                    )
+                )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(
+                    id = R.drawable.airfryer
+                ),
+                contentDescription = "Logo Splash Screen",
+                modifier = Modifier
+                    .size(400.dp)
+                    .scale(scale = scaleAnimation.value),
+            )
+        }
+    }
 }

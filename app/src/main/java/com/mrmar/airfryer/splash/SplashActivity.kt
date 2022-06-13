@@ -13,9 +13,10 @@ class SplashActivity : ComponentActivity() {
     lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //TODO create splash screen Android 12
         super.onCreate(savedInstanceState)
         setContent {
-            SplashScreen(router)
+            Splash(router)
         }
     }
 }
