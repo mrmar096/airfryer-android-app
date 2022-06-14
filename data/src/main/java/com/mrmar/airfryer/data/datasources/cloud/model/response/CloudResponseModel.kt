@@ -2,16 +2,14 @@ package com.mrmar.airfryer.data.datasources.cloud.model.response
 
 import com.google.gson.annotations.SerializedName
 
-open class CloudResponseModel {
+open class CloudResponseModel(
     @SerializedName("code")
-    val code: Int? = null
-
+    val code: Int? = null,
     @SerializedName("msg")
-    val msg: String? = null
-
+    val msg: String? = null,
     @SerializedName("traceId")
-    val traceId: String? = null
-
+    val traceId: String? = null,
+) {
     fun succeeded(): Boolean {
         return code == 0
     }

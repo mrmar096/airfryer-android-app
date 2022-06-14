@@ -25,8 +25,8 @@ internal class LoginRepositoryDefault @Inject constructor(
     }
 
     private suspend fun checkSession(sessionContext: SessionContextEntity): Boolean {
-        sessionContext.token ?: return false
-        val succeeded =  safe {
+        if (sessionContext.token.isNullOrBlank()) return false
+        val succeeded = safe {
             deviceApi.getStatus(
                 CloudRequestModelFactory.buildForStatus(
                     sessionContext.accountId,
@@ -34,7 +34,7 @@ internal class LoginRepositoryDefault @Inject constructor(
                 )
             ).succeeded()
         }
-        if(!succeeded) sessionContextDao.delete()
+        if (!succeeded) sessionContextDao.delete()
         return succeeded
     }
 
