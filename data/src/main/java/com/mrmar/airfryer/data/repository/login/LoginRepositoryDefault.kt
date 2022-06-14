@@ -5,18 +5,20 @@ import com.mrmar.airfryer.data.datasources.cloud.model.request.CloudRequestModel
 import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
 import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
 import com.mrmar.airfryer.data.repository.BaseRepository
+import com.mrmar.airfryer.domain.repository.exceptions.NoSessionDetectedException
 import com.mrmar.airfryer.domain.repository.exceptions.SessionExpiredException
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
 import javax.inject.Inject
 
 internal class LoginRepositoryDefault @Inject constructor(
     private val deviceApi: DeviceApi,
-    private val sessionContextDao: SessionContextDao,
+    private val sessionContextDao: SessionContextDao
 ) : BaseRepository(), LoginRepository {
 
     override suspend fun checkUserSession() {
         val sessionContext = sessionContextDao.getSessionContext()
-        val hasValidSession = sessionContext?.let { checkSession(it) } ?: false
+        val hasValidSession =
+            sessionContext?.let { checkSession(it) } ?: throw NoSessionDetectedException
         if (!hasValidSession) {
             throw SessionExpiredException
         }
@@ -24,7 +26,7 @@ internal class LoginRepositoryDefault @Inject constructor(
 
     private suspend fun checkSession(sessionContext: SessionContextEntity): Boolean {
         sessionContext.token ?: return false
-        return safe {
+        val succeeded =  safe {
             deviceApi.getStatus(
                 CloudRequestModelFactory.buildForStatus(
                     sessionContext.accountId,
@@ -32,6 +34,8 @@ internal class LoginRepositoryDefault @Inject constructor(
                 )
             ).succeeded()
         }
+        if(!succeeded) sessionContextDao.delete()
+        return succeeded
     }
 
     override suspend fun handleCodeErrors(code: Int, message: String): Throwable {

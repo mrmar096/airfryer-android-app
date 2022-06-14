@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -25,8 +26,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.mrmar.airfryer.core.ui.composables.LoadingScreen
+import com.mrmar.airfryer.core.ui.composables.TemporalContent
 import com.mrmar.airfryer.core.ui.composables.TextFieldError
-import com.mrmar.airfryer.core.ui.composables.TopSnackbar
 import com.mrmar.airfryer.core.ui.theme.Purple500
 import com.mrmar.airfryer.core.ui.theme.Purple700
 import com.mrmar.airfryer.core.ui.theme.Teal200
@@ -66,9 +67,6 @@ fun LoginContent(
             com.mrmar.airfryer.core.R.raw.airfryer_lottie
         )
     )
-
-    state.getErrorMessage()?.let { TopSnackbar(message = it) }
-
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -79,9 +77,9 @@ fun LoginContent(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            Teal200,
-                            Purple500,
                             Purple700,
+                            Purple500,
+                            Teal200,
                         )
                     )
                 )
@@ -89,7 +87,6 @@ fun LoginContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             LottieAnimation(
                 composition = lottieComposition,
                 modifier = Modifier.size(150.dp),
@@ -143,6 +140,16 @@ fun LoginContent(
                         .height(50.dp)
                 ) {
                     Text(text = stringResource(R.string.login).uppercase())
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            state.getErrorMessage()?.let {
+                TemporalContent {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colors.error,
+                        style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    )
                 }
             }
         }

@@ -11,6 +11,7 @@ import com.mrmar.airfryer.domain.repository.exceptions.RepositoryCoroutineHandle
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
 import com.mrmar.airfryer.login.R
 import com.mrmar.airfryer.login.presentation.viewmodel.contract.LoginContract
+import com.mrmar.airfryer.navigation.routes.LoginRouteError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class LoginViewModel @Inject constructor(
 
 
     override fun setInitialState(): LoginContract.State {
-        return LoginContract.State()
+        return LoginContract.State(error = LoginRouteError.resolveArguments(stateHandle))
     }
 
     override fun handleEvents(event: LoginContract.Event) {
@@ -47,8 +48,8 @@ class LoginViewModel @Inject constructor(
                     setState { copy(isLoading = false) }
                 }
             }
-            is LoginContract.Event.EmailChanged -> setState { copy(email = event.email) }
-            is LoginContract.Event.PasswordChanged -> setState { copy(password = event.password) }
+            is LoginContract.Event.EmailChanged -> setState { copy(email = event.email).clearErrors() }
+            is LoginContract.Event.PasswordChanged -> setState { copy(password = event.password).clearErrors() }
         }
     }
 

@@ -56,9 +56,9 @@ fun SplashContent(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Teal200,
-                        Purple500,
                         Purple700,
+                        Purple500,
+                        Teal200,
                     )
                 )
             ),
