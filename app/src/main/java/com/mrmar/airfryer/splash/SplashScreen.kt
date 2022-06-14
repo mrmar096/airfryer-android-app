@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -21,20 +20,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.mrmar.airfryer.AirfyerRouterCompose
 import com.mrmar.airfryer.R
 import com.mrmar.airfryer.core.presentation.router.Router
-import com.mrmar.airfryer.core.ui.theme.AirfryerTheme
 import com.mrmar.airfryer.core.ui.theme.Purple500
 import com.mrmar.airfryer.core.ui.theme.Purple700
 import com.mrmar.airfryer.core.ui.theme.Teal200
 import com.mrmar.airfryer.splash.viewmodel.SplashViewModel
-
-@Composable
-fun Splash(router: Router) {
-    AirfryerTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            AirfyerRouterCompose(router = router)
-        }
-    }
-}
 
 @Composable
 fun AnimationSplashContent(

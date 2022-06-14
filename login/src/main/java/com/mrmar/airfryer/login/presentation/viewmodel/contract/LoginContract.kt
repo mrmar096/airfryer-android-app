@@ -6,11 +6,15 @@ import com.mrmar.airfryer.core.presentation.viewmodel.components.ViewState
 
 class LoginContract {
     sealed class Event : ViewEvent {
-        data class UserLogin(val email: String, val password: String) : Event()
+        object UserLogin : Event()
+        data class EmailChanged(val email: String) : Event()
+        data class PasswordChanged(val password: String) : Event()
     }
 
     data class State(
         override val isLoading: Boolean = false,
+        val email: String? = null,
+        val password: String? = null,
         val error: String? = null
     ) : ViewState {
         override fun getErrorMessage() = error

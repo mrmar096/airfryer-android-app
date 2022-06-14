@@ -39,7 +39,7 @@ internal class LoginRepositoryDefault @Inject constructor(
         return super.handleCodeErrors(code, message)
     }
 
-    override suspend fun doLogin(username: String, password: String) {
+    override suspend fun doLogin(email: String, password: String) {
         //TODO call api to do the login
         sessionContextDao.save(
             SessionContextEntity(
