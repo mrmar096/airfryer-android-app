@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.core.presentation.composables
+package com.mrmar.airfryer.core.ui.composables
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass

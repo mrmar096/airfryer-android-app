@@ -15,9 +15,15 @@ class LoginContract {
         override val isLoading: Boolean = false,
         val email: String? = null,
         val password: String? = null,
+        val errorEmail: String? = null,
         val error: String? = null
     ) : ViewState {
+
         override fun getErrorMessage() = error
+
+        override fun clearErrors(): State {
+            return copy(error = null, errorEmail = null)
+        }
     }
 
     sealed class Effect : ViewSideEffect {

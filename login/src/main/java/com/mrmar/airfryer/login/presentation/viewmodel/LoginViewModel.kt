@@ -4,9 +4,12 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mrmar.airfryer.core.presentation.viewmodel.BaseViewModel
+import com.mrmar.airfryer.core.utils.Logger
+import com.mrmar.airfryer.core.utils.validateEmail
 import com.mrmar.airfryer.domain.errors.DomainError
 import com.mrmar.airfryer.domain.repository.exceptions.RepositoryCoroutineHandler
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
+import com.mrmar.airfryer.login.R
 import com.mrmar.airfryer.login.presentation.viewmodel.contract.LoginContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -32,13 +35,14 @@ class LoginViewModel @Inject constructor(
         when (event) {
             is LoginContract.Event.UserLogin -> {
                 viewModelScope.launch(RepositoryCoroutineHandler(::handleError)) {
-                    setState { copy(isLoading = true, error = null) }
+                    setState { copy(isLoading = true).clearErrors() }
                     delay(5000)
                     validateData(
                         state.email.orEmpty(),
                         state.password.orEmpty()
                     ) { email, password ->
                         loginRepository.doLogin(email, password)
+                        goToDashboard()
                     }
                     setState { copy(isLoading = false) }
                 }
@@ -48,12 +52,21 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun validateData(
+    private fun goToDashboard() {
+        //TODO go to Dashboard
+        Logger.debug("Going to dashboard")
+    }
+
+    private suspend fun validateData(
         email: String,
         password: String,
         validate: suspend (String, String) -> Unit
     ) {
-
+        if (validateEmail(email)) {
+            validate(email, password)
+        } else {
+            setState { copy(errorEmail = resources.getString(R.string.wrong_email)) }
+        }
     }
 
     private fun handleError(domainError: DomainError) {

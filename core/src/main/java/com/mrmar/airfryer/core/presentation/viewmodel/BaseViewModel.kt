@@ -31,7 +31,7 @@ abstract class BaseViewModel<Event : ViewEvent, UiState : ViewState, Effect : Vi
 
     val viewState: State<UiState> = _viewState
 
-    val state = _viewState.value
+    val state get() = _viewState.value
 
     private val _event: MutableSharedFlow<Event> = MutableSharedFlow()
 

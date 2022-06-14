@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.core.presentation.composables
+package com.mrmar.airfryer.core.ui.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column

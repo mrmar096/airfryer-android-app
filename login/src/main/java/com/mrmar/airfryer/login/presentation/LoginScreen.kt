@@ -1,5 +1,6 @@
 package com.mrmar.airfryer.login.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -9,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -22,9 +24,12 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.mrmar.airfryer.core.presentation.composables.LoadingScreen
-import com.mrmar.airfryer.core.presentation.composables.TopSnackbar
+import com.mrmar.airfryer.core.ui.composables.LoadingScreen
+import com.mrmar.airfryer.core.ui.composables.TextFieldError
+import com.mrmar.airfryer.core.ui.composables.TopSnackbar
+import com.mrmar.airfryer.core.ui.theme.Purple500
 import com.mrmar.airfryer.core.ui.theme.Purple700
+import com.mrmar.airfryer.core.ui.theme.Teal200
 import com.mrmar.airfryer.login.R
 import com.mrmar.airfryer.login.presentation.viewmodel.LoginViewModel
 import com.mrmar.airfryer.login.presentation.viewmodel.contract.LoginContract
@@ -64,12 +69,23 @@ fun LoginContent(
 
     state.getErrorMessage()?.let { TopSnackbar(message = it) }
 
-    Surface(color = Purple700, modifier = Modifier.fillMaxSize()) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         Column(
-            modifier = Modifier.apply {
-                fillMaxSize()
-                padding(all = 20.dp)
-            },
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Teal200,
+                            Purple500,
+                            Purple700,
+                        )
+                    )
+                )
+                .padding(all = 20.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -81,10 +97,14 @@ fun LoginContent(
             )
             Text(
                 text = stringResource(R.string.welcome),
-                style = TextStyle(fontSize = 35.sp, fontFamily = FontFamily.Cursive)
+                style = TextStyle(
+                    fontSize = 35.sp,
+                    fontFamily = FontFamily.Cursive,
+                    color = Color.White
+                )
             )
             Spacer(modifier = Modifier.height(40.dp))
-            TextField(
+            TextFieldError(
                 label = { Text(text = stringResource(R.string.email)) },
                 value = state.email.orEmpty(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -92,7 +112,8 @@ fun LoginContent(
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.White,
                     textColor = Color.Black
-                )
+                ),
+                error = state.errorEmail
             )
             Spacer(modifier = Modifier.height(20.dp))
             TextField(
@@ -107,7 +128,7 @@ fun LoginContent(
                 )
             )
             Spacer(modifier = Modifier.height(40.dp))
-            Box(modifier = Modifier.padding(55.dp, 0.dp, 55.dp, 0.dp)) {
+            Box(modifier = Modifier.padding(35.dp, 0.dp, 35.dp, 0.dp)) {
                 Button(
                     onClick = {
                         onEventSent(

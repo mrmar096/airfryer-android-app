@@ -17,9 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.mrmar.airfryer.AirfyerRouterCompose
 import com.mrmar.airfryer.R
-import com.mrmar.airfryer.core.presentation.router.Router
 import com.mrmar.airfryer.core.ui.theme.Purple500
 import com.mrmar.airfryer.core.ui.theme.Purple700
 import com.mrmar.airfryer.core.ui.theme.Teal200
