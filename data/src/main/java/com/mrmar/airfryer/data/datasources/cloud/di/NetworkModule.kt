@@ -1,7 +1,8 @@
 package com.mrmar.airfryer.data.datasources.cloud.di
 
 import com.mrmar.airfryer.data.BuildConfig
-import com.mrmar.airfryer.data.BuildConfig.BASE_URL
+import com.mrmar.airfryer.data.BuildConfig.BASE_URL_V1
+import com.mrmar.airfryer.data.BuildConfig.BASE_URL_V2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,9 +34,21 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun providesRetrofit(client: OkHttpClient): Retrofit {
+    @ApiV1
+    fun providesRetrofitApiClientV1(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BASE_URL_V1)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @ApiV2
+    fun providesRetrofitApiClientV2(client: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL_V2)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

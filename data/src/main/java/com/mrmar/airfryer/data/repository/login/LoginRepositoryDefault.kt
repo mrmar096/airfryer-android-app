@@ -1,6 +1,7 @@
 package com.mrmar.airfryer.data.repository.login
 
 import com.mrmar.airfryer.data.datasources.cloud.api.DeviceApi
+import com.mrmar.airfryer.data.datasources.cloud.api.LoginApi
 import com.mrmar.airfryer.data.datasources.cloud.model.request.CloudRequestModelFactory
 import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
 import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 internal class LoginRepositoryDefault @Inject constructor(
     private val deviceApi: DeviceApi,
+    private val loginApi: LoginApi,
     private val sessionContextDao: SessionContextDao
 ) : BaseRepository(), LoginRepository {
 

@@ -4,7 +4,8 @@ apply from: "$rootDir/gradle/components/android-testing.gradle"
 android {
     defaultConfig {
         //API Manager
-        buildConfigField 'String', 'BASE_URL', '\"https://smartapi.vesync.com/cloud/v1/\"'
+        buildConfigField 'String', 'BASE_URL_V1', '\"https://smartapi.vesync.com/cloud/v1/\"'
+        buildConfigField 'String', 'BASE_URL_V2', '\"https://smartapi.vesync.com/cloud/v2/\"'
         buildConfigField 'String', 'DB_NAME', '"airfryer-db"'
     }
 }

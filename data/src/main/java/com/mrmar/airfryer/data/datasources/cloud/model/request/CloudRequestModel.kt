@@ -2,11 +2,13 @@ package com.mrmar.airfryer.data.datasources.cloud.model.request
 
 import com.google.gson.annotations.SerializedName
 
-internal data class CloudRequestModel(
+private const val TRACE_ID = "1654112207258"
+
+internal open class CloudRequestModel(
     @SerializedName("acceptLanguage")
     val acceptLanguage: String = "es",
     @SerializedName("accountID")
-    val accountID: String?,
+    val accountID: String? = "",
     @SerializedName("appVersion")
     val appVersion: String = "VeSync 3.1.52 build9",
     @SerializedName("cid")
@@ -26,9 +28,9 @@ internal data class CloudRequestModel(
     @SerializedName("timeZone")
     val timeZone: String = "Europe/Madrid",
     @SerializedName("token")
-    val token: String?,
+    val token: String? = null,
     @SerializedName("traceId")
-    val traceId: String?,
+    val traceId: String = TRACE_ID,
     @SerializedName("userCountryCode")
     val userCountryCode: String? = "ES",
 )

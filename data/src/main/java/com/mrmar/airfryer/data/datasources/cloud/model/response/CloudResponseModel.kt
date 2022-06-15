@@ -2,7 +2,7 @@ package com.mrmar.airfryer.data.datasources.cloud.model.response
 
 import com.google.gson.annotations.SerializedName
 
-open class CloudResponseModel(
+internal open class CloudResponseModel(
     @SerializedName("code")
     val code: Int? = null,
     @SerializedName("msg")
