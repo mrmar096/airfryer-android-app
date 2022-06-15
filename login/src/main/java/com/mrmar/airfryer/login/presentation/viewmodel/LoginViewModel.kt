@@ -13,7 +13,6 @@ import com.mrmar.airfryer.login.R
 import com.mrmar.airfryer.login.presentation.viewmodel.contract.LoginContract
 import com.mrmar.airfryer.navigation.routes.LoginRouteError
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,7 +36,6 @@ class LoginViewModel @Inject constructor(
             is LoginContract.Event.UserLogin -> {
                 viewModelScope.launch(RepositoryCoroutineHandler(::handleError)) {
                     setState { copy(isLoading = true).clearErrors() }
-                    delay(5000)
                     validateData(
                         state.email.orEmpty(),
                         state.password.orEmpty()

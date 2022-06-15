@@ -33,8 +33,8 @@ class LoginRouteError(private val fromError: String) : Route {
             navArgument(ERROR_PARAM) { type = NavType.StringType }
         )
 
-        fun resolveArguments(stateHandle: SavedStateHandle): String {
-            return stateHandle.get<String>(ERROR_PARAM).orEmpty()
+        fun resolveArguments(stateHandle: SavedStateHandle): String? {
+            return stateHandle.get<String>(ERROR_PARAM)
         }
     }
 
