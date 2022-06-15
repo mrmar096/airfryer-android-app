@@ -34,6 +34,7 @@ internal abstract class BaseRepository {
                     Logger.error("Network call error: Code: ${ex.code()} Message: $message")
                     throw handleCodeErrors(ex.code(), message)
                 }
+                is RepositoryException -> throw ex
                 else -> throw UnknownRepositoryException
             }
         }
@@ -47,7 +48,7 @@ internal abstract class BaseRepository {
         }
     }
 
-    protected open suspend fun handleCodeErrors(code: Int, message: String): Throwable {
+    open suspend fun handleCodeErrors(code: Int, message: String): Throwable {
         return when (code) {
             ERROR_404 -> EndpointNotFoundException(code)
             else -> RepositoryException(code, message)

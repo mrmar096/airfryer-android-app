@@ -25,4 +25,8 @@ dependencies {
 
     //Utils
     api "com.jakewharton.timber:timber:4.7.1"
+
+    //Ui
+    api 'com.airbnb.android:lottie-compose:4.2.2'
+
 }

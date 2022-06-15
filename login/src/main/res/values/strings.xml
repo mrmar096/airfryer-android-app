@@ -1,1 +1,7 @@
-<resources></resources>
+<resources>
+    <string name="welcome">Welcome Chef</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="wrong_email">You\'ve entered a wrong email.</string>
+</resources>

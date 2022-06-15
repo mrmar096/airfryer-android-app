@@ -31,6 +31,8 @@ abstract class BaseViewModel<Event : ViewEvent, UiState : ViewState, Effect : Vi
 
     val viewState: State<UiState> = _viewState
 
+    val state get() = _viewState.value
+
     private val _event: MutableSharedFlow<Event> = MutableSharedFlow()
 
     private val _effect: Channel<Effect> = Channel()
@@ -62,7 +64,7 @@ abstract class BaseViewModel<Event : ViewEvent, UiState : ViewState, Effect : Vi
 
     protected abstract fun handleEvents(event: Event)
 
-    protected fun setEffect(builder: () -> Effect) {
+    fun setEffect(builder: () -> Effect) {
         val effectValue = builder()
         viewModelScope.launch { _effect.send(effectValue) }
     }

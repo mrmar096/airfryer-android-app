@@ -5,16 +5,14 @@ import com.mrmar.airfryer.core.presentation.router.routes.Route
 
 object SplashRoute : Route {
 
-    private const val URI = "splash"
+    const val URI = "splash"
 
     override fun getUriData(): String {
         return URI
     }
 
     override fun buildOptions(): NavOptions {
-        return NavOptions.Builder().apply {
-            setLaunchSingleTop(true)
-        }.build()
+        return NavOptions.Builder().build()
     }
 
 }

@@ -15,13 +15,13 @@ internal class ApiModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitLoginApi(retrofit: Retrofit): LoginApi {
+    fun provideRetrofitLoginApi(@ApiV2 retrofit: Retrofit): LoginApi {
         return retrofit.create(LoginApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideRetrofitDeviceApi(retrofit: Retrofit): DeviceApi {
+    fun provideRetrofitDeviceApi(@ApiV1 retrofit: Retrofit): DeviceApi {
         return retrofit.create(DeviceApi::class.java)
     }
 }
