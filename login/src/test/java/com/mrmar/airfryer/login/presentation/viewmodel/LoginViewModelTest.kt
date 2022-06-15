@@ -8,7 +8,7 @@ import com.mrmar.airfryer.login.helper.CoroutineTest
 import com.mrmar.airfryer.login.presentation.viewmodel.contract.LoginContract
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test

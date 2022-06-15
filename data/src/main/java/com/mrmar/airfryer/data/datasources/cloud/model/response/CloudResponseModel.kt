@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 internal open class CloudResponseModel(
     @SerializedName("code")
-    val code: Int? = null,
+    var code: Int? = null,
     @SerializedName("msg")
     val msg: String? = null,
     @SerializedName("traceId")

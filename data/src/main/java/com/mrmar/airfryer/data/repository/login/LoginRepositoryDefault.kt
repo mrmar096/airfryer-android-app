@@ -51,19 +51,17 @@ internal class LoginRepositoryDefault @Inject constructor(
     }
 
     override suspend fun doLogin(email: String, password: String) {
-        safe {
-            val response = loginApi.login(LoginRequestModel(email, password.toMD5()))
-            if (response.code in credentialsErrors) {
-                throw WrongCredentialsException
-            } else if (response.result == null) {
-                throw NoSessionDetectedException
-            }
-            sessionContextDao.save(
-                SessionContextEntity(
-                    response.result.accountID,
-                    response.result.token
-                )
-            )
+        val response = safe { loginApi.login(LoginRequestModel(email, password.toMD5())) }
+        if (response.code in credentialsErrors) {
+            throw WrongCredentialsException
+        } else if (response.result == null) {
+            throw NoSessionDetectedException
         }
+        sessionContextDao.save(
+            SessionContextEntity(
+                response.result.accountID,
+                response.result.token
+            )
+        )
     }
 }
