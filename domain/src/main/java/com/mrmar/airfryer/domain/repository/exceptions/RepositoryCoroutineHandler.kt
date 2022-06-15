@@ -14,6 +14,7 @@ class RepositoryCoroutineHandler(
         when (exception) {
             is NoConnectionException -> handler(DomainError.NoConnectionError)
             is SessionExpiredException -> handler(DomainError.SessionExpired)
+            is WrongCredentialsException -> handler(DomainError.WrongCredentials)
             is RepositoryException -> handler(DomainError.ServiceError)
             else -> {
                 Logger.error("Repository Coroutine unmanaged error: \n ${exception.stackTraceToString()}")

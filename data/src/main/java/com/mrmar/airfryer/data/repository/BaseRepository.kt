@@ -34,6 +34,7 @@ internal abstract class BaseRepository {
                     Logger.error("Network call error: Code: ${ex.code()} Message: $message")
                     throw handleCodeErrors(ex.code(), message)
                 }
+                is RepositoryException -> throw ex
                 else -> throw UnknownRepositoryException
             }
         }

@@ -21,4 +21,10 @@ sealed class DomainError : Translatable {
             return resources.getString(R.string.session_expired_error)
         }
     }
+
+    object WrongCredentials : DomainError() {
+        override fun getStringResource(resources: Resources): String {
+            return resources.getString(R.string.wrong_credentials_error)
+        }
+    }
 }

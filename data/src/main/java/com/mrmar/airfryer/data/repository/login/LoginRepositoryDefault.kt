@@ -10,6 +10,7 @@ import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
 import com.mrmar.airfryer.data.repository.BaseRepository
 import com.mrmar.airfryer.domain.repository.exceptions.NoSessionDetectedException
 import com.mrmar.airfryer.domain.repository.exceptions.SessionExpiredException
+import com.mrmar.airfryer.domain.repository.exceptions.WrongCredentialsException
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
 import javax.inject.Inject
 
@@ -18,6 +19,8 @@ internal class LoginRepositoryDefault @Inject constructor(
     private val loginApi: LoginApi,
     private val sessionContextDao: SessionContextDao
 ) : BaseRepository(), LoginRepository {
+
+    private val credentialsErrors = arrayOf(-11201022, -11202022)
 
     override suspend fun checkUserSession() {
         val sessionContext = sessionContextDao.getSessionContext()
@@ -49,12 +52,16 @@ internal class LoginRepositoryDefault @Inject constructor(
 
     override suspend fun doLogin(email: String, password: String) {
         safe {
-            val response = loginApi.login(LoginRequestModel(email, password.toMD5())).result
-                ?: throw NoSessionDetectedException
+            val response = loginApi.login(LoginRequestModel(email, password.toMD5()))
+            if (response.code in credentialsErrors) {
+                throw WrongCredentialsException
+            } else if (response.result == null) {
+                throw NoSessionDetectedException
+            }
             sessionContextDao.save(
                 SessionContextEntity(
-                    response.accountID,
-                    response.token
+                    response.result.accountID,
+                    response.result.token
                 )
             )
         }
