@@ -32,9 +32,9 @@ internal object NetworkModule {
     }
 
 
+    @ApiV1
     @Provides
     @Singleton
-    @ApiV1
     fun providesRetrofitApiClientV1(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL_V1)
@@ -43,9 +43,9 @@ internal object NetworkModule {
             .build()
     }
 
+    @ApiV2
     @Provides
     @Singleton
-    @ApiV2
     fun providesRetrofitApiClientV2(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL_V2)

@@ -1,8 +1,10 @@
 package com.mrmar.airfryer.data.repository.login
 
+import com.mrmar.airfryer.core.utils.toMD5
 import com.mrmar.airfryer.data.datasources.cloud.api.DeviceApi
 import com.mrmar.airfryer.data.datasources.cloud.api.LoginApi
 import com.mrmar.airfryer.data.datasources.cloud.model.request.CloudRequestModelFactory
+import com.mrmar.airfryer.data.datasources.cloud.model.request.login.LoginRequestModel
 import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
 import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
 import com.mrmar.airfryer.data.repository.BaseRepository
@@ -46,12 +48,15 @@ internal class LoginRepositoryDefault @Inject constructor(
     }
 
     override suspend fun doLogin(email: String, password: String) {
-        //TODO call api to do the login
-        sessionContextDao.save(
-            SessionContextEntity(
-                "",
-                ""
+        safe {
+            val response = loginApi.login(LoginRequestModel(email, password.toMD5())).result
+                ?: throw NoSessionDetectedException
+            sessionContextDao.save(
+                SessionContextEntity(
+                    response.accountID,
+                    response.token
+                )
             )
-        )
+        }
     }
 }

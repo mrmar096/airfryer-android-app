@@ -2,8 +2,6 @@ package com.mrmar.airfryer.data.datasources.cloud.model.request
 
 import com.google.gson.annotations.SerializedName
 
-private const val TRACE_ID = "1654112207258"
-
 internal open class CloudRequestModel(
     @SerializedName("acceptLanguage")
     val acceptLanguage: String = "es",
@@ -30,7 +28,7 @@ internal open class CloudRequestModel(
     @SerializedName("token")
     val token: String? = null,
     @SerializedName("traceId")
-    val traceId: String = TRACE_ID,
+    val traceId: String? = null,
     @SerializedName("userCountryCode")
     val userCountryCode: String? = "ES",
 )
