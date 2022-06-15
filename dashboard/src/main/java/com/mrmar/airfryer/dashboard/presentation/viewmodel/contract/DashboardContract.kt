@@ -5,7 +5,10 @@ import com.mrmar.airfryer.core.presentation.viewmodel.components.ViewSideEffect
 import com.mrmar.airfryer.core.presentation.viewmodel.components.ViewState
 
 class DashboardContract {
-    sealed class Event : ViewEvent {}
+    sealed class Event : ViewEvent {
+        object Logout : Event()
+        object StartCooking : Event()
+    }
 
     data class State(
         override val isLoading: Boolean = false,
