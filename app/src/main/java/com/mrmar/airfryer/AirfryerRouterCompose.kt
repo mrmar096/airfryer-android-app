@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mrmar.airfryer.core.presentation.router.Router
 import com.mrmar.airfryer.core.presentation.router.routes.BackRoute
+import com.mrmar.airfryer.dashboard.presentation.route.DashboardRouteGraph
 import com.mrmar.airfryer.login.presentation.route.LoginRouteGraph
 import com.mrmar.airfryer.navigation.routes.SplashRoute
 import com.mrmar.airfryer.splash.AnimationSplashContent
@@ -31,6 +32,7 @@ fun AirfyerRouterCompose(router: Router) {
     NavHost(navController, startDestination = SplashRoute.getUriData()) {
         splashComposable()
         LoginRouteGraph.build(this)
+        DashboardRouteGraph.build(this)
     }
 }
 
