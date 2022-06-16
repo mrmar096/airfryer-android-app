@@ -22,17 +22,18 @@ internal class LoginRepositoryDefault @Inject constructor(
     private val credentialsErrors = arrayOf(-11201022, -11202022)
 
     override suspend fun checkUserSession() {
-        val sessionContext = sessionContextDao.getSessionContext()
-        sessionContext?.let { checkSession(it) } ?: throw NoSessionDetectedException
+        val sessionContext = sessionContextDao.getSessionContext() ?: throw NoSessionDetectedException
+        val (account, token) = sessionContext.accountId to sessionContext.token
+        if (token.isNullOrBlank()) throw NoSessionDetectedException
+        checkSession(account, token)
     }
 
-    private suspend fun checkSession(sessionContext: SessionContextEntity) {
-        if (sessionContext.token.isNullOrBlank()) throw NoSessionDetectedException
+    private suspend fun checkSession(account: String, token: String) {
         safe {
             deviceApi.sendOperation(
                 CloudRequestModelFactory.buildForStatus(
-                    sessionContext.accountId,
-                    sessionContext.token
+                    account,
+                    token
                 )
             )
         }
