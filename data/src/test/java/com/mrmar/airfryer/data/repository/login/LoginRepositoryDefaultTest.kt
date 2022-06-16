@@ -3,8 +3,8 @@ package com.mrmar.airfryer.data.repository.login
  import com.mrmar.airfryer.data.datasources.cloud.api.DeviceApi
  import com.mrmar.airfryer.data.datasources.cloud.api.LoginApi
  import com.mrmar.airfryer.data.datasources.cloud.model.request.login.LoginRequestModel
- import com.mrmar.airfryer.data.datasources.cloud.model.response.CloudResponseModel
  import com.mrmar.airfryer.data.datasources.cloud.model.response.GenericResponseResultModel
+ import com.mrmar.airfryer.data.datasources.cloud.model.response.device.DeviceStatusResponseResult
  import com.mrmar.airfryer.data.datasources.cloud.model.response.login.LoginResponseResult
  import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
  import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
@@ -15,7 +15,6 @@ package com.mrmar.airfryer.data.repository.login
  import com.nhaarman.mockitokotlin2.never
  import com.nhaarman.mockitokotlin2.verify
  import com.nhaarman.mockitokotlin2.whenever
- import kotlinx.coroutines.ExperimentalCoroutinesApi
  import kotlinx.coroutines.runBlocking
  import org.junit.Before
  import org.junit.Test
@@ -23,7 +22,6 @@ package com.mrmar.airfryer.data.repository.login
  import org.mockito.Mock
  import org.mockito.MockitoAnnotations
 
-@ExperimentalCoroutinesApi
 internal class LoginRepositoryDefaultTest {
 
     @Mock
@@ -56,7 +54,9 @@ internal class LoginRepositoryDefaultTest {
     fun checkUserSession_givenExpiredSessionFromDao_shouldThrowSessionExpiredException() {
         runBlocking {
             val mockEntity = SessionContextEntity("", "123124124124124")
-            val mockResponse = CloudResponseModel(code = -1)
+            val mockResponse =  GenericResponseResultModel<DeviceStatusResponseResult>().apply{
+                code = -11001022
+            }
 
             whenever(sessionContextDao.getSessionContext()).thenReturn(mockEntity)
             whenever(deviceApi.sendOperation(any())).thenReturn(mockResponse)
@@ -69,7 +69,9 @@ internal class LoginRepositoryDefaultTest {
     fun checkUserSession_givenExpiredSessionFromDao_shouldRemoveSessionStored() {
         runBlocking {
             val mockEntity = SessionContextEntity("", "123124124124124")
-            val mockResponse = CloudResponseModel(code = -1)
+            val mockResponse =  GenericResponseResultModel<DeviceStatusResponseResult>().apply{
+                code = -11001022
+            }
 
             whenever(sessionContextDao.getSessionContext()).thenReturn(mockEntity)
             whenever(deviceApi.sendOperation(any())).thenReturn(mockResponse)
@@ -80,37 +82,35 @@ internal class LoginRepositoryDefaultTest {
         }
     }
 
-    @Test
+    @Test(expected = NoSessionDetectedException::class)
     fun checkUserSession_givenNullSessionFromDao_shouldNoRemoveSessionStored() {
         runBlocking {
             val mockEntity = SessionContextEntity("", null)
-            val mockResponse = CloudResponseModel(code = -1)
+            val mockResponse =  GenericResponseResultModel<DeviceStatusResponseResult>().apply{
+                code = -11001022
+            }
 
             whenever(sessionContextDao.getSessionContext()).thenReturn(mockEntity)
             whenever(deviceApi.sendOperation(any())).thenReturn(mockResponse)
 
-            try {
-                repository.checkUserSession()
-            } catch (ex: SessionExpiredException) {
-            }
+            repository.checkUserSession()
 
             verify(sessionContextDao, never()).delete()
         }
     }
 
-    @Test
+    @Test(expected = NoSessionDetectedException::class)
     fun checkUserSession_givenEmptySessionFromDao_shouldNoRemoveSessionStored() {
         runBlocking {
             val mockEntity = SessionContextEntity("", "")
-            val mockResponse = CloudResponseModel(code = -1)
+            val mockResponse =  GenericResponseResultModel<DeviceStatusResponseResult>().apply{
+                code = -11001022
+            }
 
             whenever(sessionContextDao.getSessionContext()).thenReturn(mockEntity)
             whenever(deviceApi.sendOperation(any())).thenReturn(mockResponse)
 
-            try {
-                repository.checkUserSession()
-            } catch (ex: SessionExpiredException) {
-            }
+            repository.checkUserSession()
 
             verify(sessionContextDao, never()).delete()
         }
