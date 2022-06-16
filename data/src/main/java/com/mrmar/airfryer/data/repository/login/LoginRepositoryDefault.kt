@@ -9,7 +9,6 @@ import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
 import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
 import com.mrmar.airfryer.data.repository.BaseRepository
 import com.mrmar.airfryer.domain.repository.exceptions.NoSessionDetectedException
-import com.mrmar.airfryer.domain.repository.exceptions.SessionExpiredException
 import com.mrmar.airfryer.domain.repository.exceptions.WrongCredentialsException
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
 import javax.inject.Inject
@@ -17,32 +16,26 @@ import javax.inject.Inject
 internal class LoginRepositoryDefault @Inject constructor(
     private val deviceApi: DeviceApi,
     private val loginApi: LoginApi,
-    private val sessionContextDao: SessionContextDao
-) : BaseRepository(), LoginRepository {
+    sessionContextDao: SessionContextDao
+) : BaseRepository(sessionContextDao), LoginRepository {
 
     private val credentialsErrors = arrayOf(-11201022, -11202022)
 
     override suspend fun checkUserSession() {
         val sessionContext = sessionContextDao.getSessionContext()
-        val hasValidSession =
-            sessionContext?.let { checkSession(it) } ?: throw NoSessionDetectedException
-        if (!hasValidSession) {
-            throw SessionExpiredException
-        }
+        sessionContext?.let { checkSession(it) } ?: throw NoSessionDetectedException
     }
 
-    private suspend fun checkSession(sessionContext: SessionContextEntity): Boolean {
-        if (sessionContext.token.isNullOrBlank()) return false
-        val succeeded = safe {
-            deviceApi.getStatus(
+    private suspend fun checkSession(sessionContext: SessionContextEntity) {
+        if (sessionContext.token.isNullOrBlank()) throw NoSessionDetectedException
+        safe {
+            deviceApi.sendOperation(
                 CloudRequestModelFactory.buildForStatus(
                     sessionContext.accountId,
                     sessionContext.token
                 )
-            ).succeeded()
+            )
         }
-        if (!succeeded) sessionContextDao.delete()
-        return succeeded
     }
 
     override suspend fun handleCodeErrors(code: Int, message: String): Throwable {

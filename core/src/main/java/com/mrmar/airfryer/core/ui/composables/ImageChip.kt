@@ -22,14 +22,16 @@ import com.mrmar.airfryer.core.ui.theme.Purple500
 fun ImageChip(
     text: String,
     icon: Painter,
-    onClick: (() -> Unit)? = null,
-    isSelected: Boolean
+    isEnabled: Boolean,
+    isSelected: Boolean,
+    onClick: (() -> Unit)? = null
 ) {
+    val tintColor = if (!isEnabled) Inactive else if (isSelected) Color.White else Purple500
     Surface(
         modifier = Modifier
             .padding(all = 4.dp)
             .clickable(
-                onClick = { onClick?.invoke() },
+                onClick = { if (isEnabled) onClick?.invoke() },
             ),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(
@@ -45,7 +47,7 @@ fun ImageChip(
             Icon(
                 icon,
                 contentDescription = "...",
-                tint = if (isSelected) Color.White else Purple500,
+                tint = tintColor,
                 modifier = Modifier.size(24.dp)
             )
             Spacer(Modifier.width(6.dp))
@@ -53,7 +55,7 @@ fun ImageChip(
                 text = text,
                 style = TextStyle(
                     fontSize = 12.sp,
-                    color = if (isSelected) Color.White else Purple500
+                    color = tintColor
                 )
             )
         }

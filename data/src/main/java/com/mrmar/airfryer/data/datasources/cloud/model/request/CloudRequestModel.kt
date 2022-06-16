@@ -14,7 +14,7 @@ internal open class CloudRequestModel(
     @SerializedName("debugMode")
     val debugMode: Boolean = false,
     @SerializedName("jsonCmd")
-    val jsonCmd: CloudRequestCookCommand? = null,
+    val jsonCmd: CloudRequestCommand? = null,
     @SerializedName("deviceList")
     val deviceList: List<CloudRequestDevice>? = null,
     @SerializedName("method")

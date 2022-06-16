@@ -3,6 +3,7 @@ package com.mrmar.airfryer.dashboard.presentation.viewmodel.contract
 import com.mrmar.airfryer.core.presentation.viewmodel.components.ViewEvent
 import com.mrmar.airfryer.core.presentation.viewmodel.components.ViewSideEffect
 import com.mrmar.airfryer.core.presentation.viewmodel.components.ViewState
+import com.mrmar.airfryer.domain.models.DeviceStatus
 import com.mrmar.airfryer.domain.models.Meal
 
 class DashboardContract {
@@ -17,9 +18,11 @@ class DashboardContract {
         override val isLoading: Boolean = false,
         val meals: List<Meal> = listOf(),
         val mealSelected: Meal? = null,
-        val isCooking: Boolean = false,
+        val deviceStatus: DeviceStatus = DeviceStatus.OFFLINE,
         val error: String? = null
     ) : ViewState {
+
+        val isCooking = deviceStatus == DeviceStatus.COOKING
 
         override fun getErrorMessage() = error
 

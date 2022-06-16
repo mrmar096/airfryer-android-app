@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -29,10 +31,14 @@ import com.mrmar.airfryer.core.ui.composables.AppBarScreen
 import com.mrmar.airfryer.core.ui.composables.ExpandableProgressFloatingActionButton
 import com.mrmar.airfryer.core.ui.composables.ImageChip
 import com.mrmar.airfryer.core.ui.composables.LoadingScreen
-import com.mrmar.airfryer.core.ui.theme.*
+import com.mrmar.airfryer.core.ui.theme.Inactive
+import com.mrmar.airfryer.core.ui.theme.Negative400
+import com.mrmar.airfryer.core.ui.theme.Shapes
+import com.mrmar.airfryer.core.ui.theme.Teal200
 import com.mrmar.airfryer.dashboard.R
 import com.mrmar.airfryer.dashboard.presentation.viewmodel.DashboardViewModel
 import com.mrmar.airfryer.dashboard.presentation.viewmodel.contract.DashboardContract
+import com.mrmar.airfryer.domain.models.DeviceStatus
 import com.mrmar.airfryer.domain.models.Meal
 import kotlin.text.Typography.bullet
 
@@ -90,7 +96,8 @@ fun DashboardContent(
         ) {
             DeviceHeaderCard(
                 state.meals,
-                state.mealSelected
+                state.mealSelected,
+                state.deviceStatus
             ) { onEventSent(DashboardContract.Event.MealSelectionChange(it)) }
         }
     }
@@ -100,6 +107,7 @@ fun DashboardContent(
 fun DeviceHeaderCard(
     meals: List<Meal>,
     selectedMeal: Meal? = null,
+    deviceStatus: DeviceStatus,
     onSelectedChanged: (Meal) -> Unit = {}
 ) {
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
@@ -116,19 +124,21 @@ fun DeviceHeaderCard(
             elevation = 8.dp,
             shape = Shapes.medium
         ) {
-            DeviceCardContent(meals, selectedMeal, onSelectedChanged)
+            DeviceCardContent(meals, selectedMeal, deviceStatus, onSelectedChanged)
         }
-        DeviceCircleImage()
+        DeviceCircleImage(deviceStatus)
     }
 }
 
 @Composable
-fun DeviceCircleImage() {
+fun DeviceCircleImage(deviceStatus: DeviceStatus) {
     Card(
         shape = CircleShape,
-        border = BorderStroke(4.dp, color = Positive400),
-        modifier = Modifier
-            .size(80.dp),
+        border = BorderStroke(
+            4.dp,
+            color = Color(deviceStatus.getColorResource(LocalContext.current.resources))
+        ),
+        modifier = Modifier.size(80.dp),
         elevation = 4.dp
     ) {
         Image(
@@ -142,6 +152,7 @@ fun DeviceCircleImage() {
 fun DeviceCardContent(
     meals: List<Meal>,
     selectedMeal: Meal? = null,
+    deviceStatus: DeviceStatus,
     onSelectedChanged: (Meal) -> Unit = {}
 ) {
     Column(
@@ -154,10 +165,16 @@ fun DeviceCardContent(
         Text(text = buildAnnotatedString {
             append(bullet)
             append("\t\t")
-            append("Active now")
-            addStyle(SpanStyle(Positive400, fontSize = 16.sp, fontWeight = FontWeight.Bold), 0, 1)
+            append(deviceStatus.getStringResource(LocalContext.current.resources))
+            addStyle(
+                SpanStyle(
+                    Color(deviceStatus.getColorResource(LocalContext.current.resources)),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                ), 0, 1
+            )
         }, style = MaterialTheme.typography.body2)
-        BasicFunctionsChips(meals, selectedMeal, onSelectedChanged)
+        BasicFunctionsChips(meals, selectedMeal, deviceStatus == DeviceStatus.ONLINE, onSelectedChanged)
     }
 }
 
@@ -165,6 +182,7 @@ fun DeviceCardContent(
 fun BasicFunctionsChips(
     meals: List<Meal>,
     selectedMeal: Meal? = null,
+    isPanelEnabled: Boolean,
     onSelectedChanged: (Meal) -> Unit = {},
 ) {
     Column(modifier = Modifier.padding(8.dp)) {
@@ -174,9 +192,10 @@ fun BasicFunctionsChips(
             items(meals) { meal ->
                 ImageChip(
                     text = meal.name,
-                    onClick = { onSelectedChanged(meal) },
                     icon = painterResource(meal.imageResource),
-                    isSelected = meal == selectedMeal
+                    isEnabled = isPanelEnabled,
+                    isSelected = meal == selectedMeal,
+                    onClick = { onSelectedChanged(meal) }
                 )
             }
         }

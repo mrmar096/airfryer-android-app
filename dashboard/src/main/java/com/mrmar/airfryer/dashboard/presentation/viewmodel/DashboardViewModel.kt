@@ -8,7 +8,9 @@ import com.mrmar.airfryer.dashboard.R
 import com.mrmar.airfryer.dashboard.presentation.viewmodel.contract.DashboardContract
 import com.mrmar.airfryer.domain.errors.DomainError
 import com.mrmar.airfryer.domain.models.CookSetup
+import com.mrmar.airfryer.domain.models.DeviceStatus
 import com.mrmar.airfryer.domain.models.Meal
+import com.mrmar.airfryer.domain.repository.device.DeviceRepository
 import com.mrmar.airfryer.domain.repository.exceptions.RepositoryCoroutineHandler
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
 import com.mrmar.airfryer.navigation.routes.LoginRoute
@@ -21,14 +23,21 @@ class DashboardViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val resources: Resources,
     private val loginRepository: LoginRepository,
+    private val deviceRepository: DeviceRepository,
 ) : BaseViewModel<
         DashboardContract.Event,
         DashboardContract.State,
         DashboardContract.Effect>(stateHandle) {
 
+    init {
+        launch {
+            val status = deviceRepository.getStatus()
+            setState { copy(isLoading = false, deviceStatus = status) }
+        }
+    }
 
     override fun setInitialState(): DashboardContract.State {
-        return DashboardContract.State(meals = mockMealList())
+        return DashboardContract.State(meals = mockMealList(), isLoading = true)
     }
 
     private fun mockMealList(): List<Meal> {
@@ -50,26 +59,31 @@ class DashboardViewModel @Inject constructor(
 
     override fun handleEvents(event: DashboardContract.Event) {
         when (event) {
-            DashboardContract.Event.Logout -> viewModelScope.launch(RepositoryCoroutineHandler(::handleError)) {
+            DashboardContract.Event.Logout -> launch {
                 loginRepository.doLogout()
                 router.navigate(LoginRoute())
             }
             is DashboardContract.Event.MealSelectionChange -> setState {
                 copy(
                     mealSelected = if (event.meal == state.mealSelected) null else event.meal,
-                    isCooking = false
                 )
             }
             DashboardContract.Event.StartCooking -> setState {
-                copy(isCooking = true)
+                copy(deviceStatus = DeviceStatus.COOKING)
             }
             DashboardContract.Event.StopCooking -> setState {
-                copy(isCooking = false)
+                copy(deviceStatus = DeviceStatus.ONLINE)
             }
         }
     }
 
     private fun handleError(domainError: DomainError) {
         setState { copy(isLoading = false, error = domainError.getStringResource(resources)) }
+    }
+
+    private fun launch(invoke: suspend () -> Unit) {
+        viewModelScope.launch(RepositoryCoroutineHandler(::handleError)) {
+            invoke()
+        }
     }
 }
