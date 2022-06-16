@@ -58,6 +58,7 @@ dependencies {
     implementation project(':domain')
     implementation project(':navigation')
     implementation project(':login')
+    implementation project(':dashboard')
 
     //DI
     implementation "com.google.dagger:hilt-android:$dagger_version"

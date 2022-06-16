@@ -24,3 +24,8 @@ fun TemporalContent(
         content()
     }
 }
+
+@Composable
+fun <T> visibility(condition: Boolean, content: @Composable () -> T): T? {
+    return if (condition) content() else null
+}
