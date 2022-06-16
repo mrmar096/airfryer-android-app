@@ -1,29 +1,27 @@
 package com.mrmar.airfryer.data.repository.login
 
  import com.mrmar.airfryer.data.datasources.cloud.api.DeviceApi
-import com.mrmar.airfryer.data.datasources.cloud.api.LoginApi
-import com.mrmar.airfryer.data.datasources.cloud.model.request.login.LoginRequestModel
-import com.mrmar.airfryer.data.datasources.cloud.model.response.CloudResponseModel
-import com.mrmar.airfryer.data.datasources.cloud.model.response.login.LoginResponseModel
-import com.mrmar.airfryer.data.datasources.cloud.model.response.login.LoginResponseResult
-import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
-import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
-import com.mrmar.airfryer.domain.repository.exceptions.NoSessionDetectedException
-import com.mrmar.airfryer.domain.repository.exceptions.SessionExpiredException
-import com.mrmar.airfryer.domain.repository.exceptions.WrongCredentialsException
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import org.junit.Before
-import org.junit.Test
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
+ import com.mrmar.airfryer.data.datasources.cloud.api.LoginApi
+ import com.mrmar.airfryer.data.datasources.cloud.model.request.login.LoginRequestModel
+ import com.mrmar.airfryer.data.datasources.cloud.model.response.GenericResponseResultModel
+ import com.mrmar.airfryer.data.datasources.cloud.model.response.device.DeviceStatusResponseResult
+ import com.mrmar.airfryer.data.datasources.cloud.model.response.login.LoginResponseResult
+ import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
+ import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
+ import com.mrmar.airfryer.domain.repository.exceptions.NoSessionDetectedException
+ import com.mrmar.airfryer.domain.repository.exceptions.SessionExpiredException
+ import com.mrmar.airfryer.domain.repository.exceptions.WrongCredentialsException
+ import com.nhaarman.mockitokotlin2.any
+ import com.nhaarman.mockitokotlin2.never
+ import com.nhaarman.mockitokotlin2.verify
+ import com.nhaarman.mockitokotlin2.whenever
+ import kotlinx.coroutines.runBlocking
+ import org.junit.Before
+ import org.junit.Test
+ import org.mockito.InjectMocks
+ import org.mockito.Mock
+ import org.mockito.MockitoAnnotations
 
-@ExperimentalCoroutinesApi
 internal class LoginRepositoryDefaultTest {
 
     @Mock
@@ -56,10 +54,12 @@ internal class LoginRepositoryDefaultTest {
     fun checkUserSession_givenExpiredSessionFromDao_shouldThrowSessionExpiredException() {
         runBlocking {
             val mockEntity = SessionContextEntity("", "123124124124124")
-            val mockResponse = CloudResponseModel(code = -1)
+            val mockResponse =  GenericResponseResultModel<DeviceStatusResponseResult>().apply{
+                code = -11001022
+            }
 
             whenever(sessionContextDao.getSessionContext()).thenReturn(mockEntity)
-            whenever(deviceApi.getStatus(any())).thenReturn(mockResponse)
+            whenever(deviceApi.sendOperation(any())).thenReturn(mockResponse)
 
             repository.checkUserSession()
         }
@@ -69,10 +69,12 @@ internal class LoginRepositoryDefaultTest {
     fun checkUserSession_givenExpiredSessionFromDao_shouldRemoveSessionStored() {
         runBlocking {
             val mockEntity = SessionContextEntity("", "123124124124124")
-            val mockResponse = CloudResponseModel(code = -1)
+            val mockResponse =  GenericResponseResultModel<DeviceStatusResponseResult>().apply{
+                code = -11001022
+            }
 
             whenever(sessionContextDao.getSessionContext()).thenReturn(mockEntity)
-            whenever(deviceApi.getStatus(any())).thenReturn(mockResponse)
+            whenever(deviceApi.sendOperation(any())).thenReturn(mockResponse)
 
             repository.checkUserSession()
 
@@ -80,37 +82,35 @@ internal class LoginRepositoryDefaultTest {
         }
     }
 
-    @Test
+    @Test(expected = NoSessionDetectedException::class)
     fun checkUserSession_givenNullSessionFromDao_shouldNoRemoveSessionStored() {
         runBlocking {
             val mockEntity = SessionContextEntity("", null)
-            val mockResponse = CloudResponseModel(code = -1)
+            val mockResponse =  GenericResponseResultModel<DeviceStatusResponseResult>().apply{
+                code = -11001022
+            }
 
             whenever(sessionContextDao.getSessionContext()).thenReturn(mockEntity)
-            whenever(deviceApi.getStatus(any())).thenReturn(mockResponse)
+            whenever(deviceApi.sendOperation(any())).thenReturn(mockResponse)
 
-            try {
-                repository.checkUserSession()
-            } catch (ex: SessionExpiredException) {
-            }
+            repository.checkUserSession()
 
             verify(sessionContextDao, never()).delete()
         }
     }
 
-    @Test
+    @Test(expected = NoSessionDetectedException::class)
     fun checkUserSession_givenEmptySessionFromDao_shouldNoRemoveSessionStored() {
         runBlocking {
             val mockEntity = SessionContextEntity("", "")
-            val mockResponse = CloudResponseModel(code = -1)
+            val mockResponse =  GenericResponseResultModel<DeviceStatusResponseResult>().apply{
+                code = -11001022
+            }
 
             whenever(sessionContextDao.getSessionContext()).thenReturn(mockEntity)
-            whenever(deviceApi.getStatus(any())).thenReturn(mockResponse)
+            whenever(deviceApi.sendOperation(any())).thenReturn(mockResponse)
 
-            try {
-                repository.checkUserSession()
-            } catch (ex: SessionExpiredException) {
-            }
+            repository.checkUserSession()
 
             verify(sessionContextDao, never()).delete()
         }
@@ -127,7 +127,7 @@ internal class LoginRepositoryDefaultTest {
     @Test(expected = WrongCredentialsException::class)
     fun doLogin_whenResponseCodeIsWrongEmail_shouldThrowWrongCredentialsException() {
         runBlocking {
-            val mockResponse = LoginResponseModel().apply { code = -11202022 }
+            val mockResponse = GenericResponseResultModel<LoginResponseResult>().apply { code = -11202022 }
             whenever(loginApi.login(any())).thenReturn(mockResponse)
 
             repository.doLogin("mario.pcdl@gmail.com", "123456")
@@ -137,7 +137,7 @@ internal class LoginRepositoryDefaultTest {
     @Test(expected = WrongCredentialsException::class)
     fun doLogin_whenResponseCodeIsWrongPassword_shouldThrowWrongCredentialsException() {
         runBlocking {
-            val mockResponse = LoginResponseModel().apply { code = -11201022 }
+            val mockResponse = GenericResponseResultModel<LoginResponseResult>().apply { code = -11201022 }
 
             whenever(loginApi.login(any())).thenReturn(mockResponse)
 
@@ -148,7 +148,7 @@ internal class LoginRepositoryDefaultTest {
     @Test(expected = NoSessionDetectedException::class)
     fun doLogin_whenResponseHasNotResult_shouldThrowNoSessionDetectedException() {
         runBlocking {
-            val mockResponse = LoginResponseModel().apply { code = 0 }
+            val mockResponse = GenericResponseResultModel<LoginResponseResult>().apply { code = 0 }
 
             whenever(loginApi.login(any())).thenReturn(mockResponse)
 
@@ -160,7 +160,7 @@ internal class LoginRepositoryDefaultTest {
     fun doLogin_whenResponseHasResultWithAccountAndToken_shouldSaveSession() {
         runBlocking {
             val result = LoginResponseResult("mario.1", "12312")
-            val mockResponse = LoginResponseModel(result).apply { code = 0 }
+            val mockResponse = GenericResponseResultModel<LoginResponseResult>(result).apply { code = 0 }
 
             whenever(loginApi.login(any())).thenReturn(mockResponse)
 
@@ -179,7 +179,7 @@ internal class LoginRepositoryDefaultTest {
     fun doLogin_givenPasswordDecrypted_shouldCallWithEncryptedPassword() {
         runBlocking {
             val result = LoginResponseResult("mario.1", "12312")
-            val mockResponse = LoginResponseModel(result).apply { code = 0 }
+            val mockResponse = GenericResponseResultModel<LoginResponseResult>(result).apply { code = 0 }
 
             whenever(loginApi.login(any())).thenReturn(mockResponse)
 
@@ -191,6 +191,14 @@ internal class LoginRepositoryDefaultTest {
                     "e10adc3949ba59abbe56e057f20f883e"
                 )
             )
+        }
+    }
+
+    @Test
+    fun doLogout_shouldDeleteSessionContext() {
+        runBlocking {
+            repository.doLogout()
+            verify(sessionContextDao).delete()
         }
     }
 }

@@ -9,7 +9,6 @@ import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
 import com.mrmar.airfryer.data.datasources.local.entities.SessionContextEntity
 import com.mrmar.airfryer.data.repository.BaseRepository
 import com.mrmar.airfryer.domain.repository.exceptions.NoSessionDetectedException
-import com.mrmar.airfryer.domain.repository.exceptions.SessionExpiredException
 import com.mrmar.airfryer.domain.repository.exceptions.WrongCredentialsException
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
 import javax.inject.Inject
@@ -17,36 +16,31 @@ import javax.inject.Inject
 internal class LoginRepositoryDefault @Inject constructor(
     private val deviceApi: DeviceApi,
     private val loginApi: LoginApi,
-    private val sessionContextDao: SessionContextDao
-) : BaseRepository(), LoginRepository {
+    sessionContextDao: SessionContextDao
+) : BaseRepository(sessionContextDao), LoginRepository {
 
     private val credentialsErrors = arrayOf(-11201022, -11202022)
 
     override suspend fun checkUserSession() {
-        val sessionContext = sessionContextDao.getSessionContext()
-        val hasValidSession =
-            sessionContext?.let { checkSession(it) } ?: throw NoSessionDetectedException
-        if (!hasValidSession) {
-            throw SessionExpiredException
-        }
+        val sessionContext = sessionContextDao.getSessionContext() ?: throw NoSessionDetectedException
+        val (account, token) = sessionContext.accountId to sessionContext.token
+        if (token.isNullOrBlank()) throw NoSessionDetectedException
+        checkSession(account, token)
     }
 
-    private suspend fun checkSession(sessionContext: SessionContextEntity): Boolean {
-        if (sessionContext.token.isNullOrBlank()) return false
-        val succeeded = safe {
-            deviceApi.getStatus(
+    private suspend fun checkSession(account: String, token: String) {
+        safe {
+            deviceApi.sendOperation(
                 CloudRequestModelFactory.buildForStatus(
-                    sessionContext.accountId,
-                    sessionContext.token
+                    account,
+                    token
                 )
-            ).succeeded()
+            )
         }
-        if (!succeeded) sessionContextDao.delete()
-        return succeeded
     }
 
     override suspend fun handleCodeErrors(code: Int, message: String): Throwable {
-        sessionContextDao.delete()
+        doLogout()
         return super.handleCodeErrors(code, message)
     }
 
@@ -63,5 +57,9 @@ internal class LoginRepositoryDefault @Inject constructor(
                 response.result.token
             )
         )
+    }
+
+    override suspend fun doLogout() {
+        sessionContextDao.delete()
     }
 }

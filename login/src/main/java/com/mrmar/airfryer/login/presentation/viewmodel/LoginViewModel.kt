@@ -4,13 +4,13 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mrmar.airfryer.core.presentation.viewmodel.BaseViewModel
-import com.mrmar.airfryer.core.utils.Logger
 import com.mrmar.airfryer.core.utils.validateEmail
 import com.mrmar.airfryer.domain.errors.DomainError
 import com.mrmar.airfryer.domain.repository.exceptions.RepositoryCoroutineHandler
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
 import com.mrmar.airfryer.login.R
 import com.mrmar.airfryer.login.presentation.viewmodel.contract.LoginContract
+import com.mrmar.airfryer.navigation.routes.DashboardRoute
 import com.mrmar.airfryer.navigation.routes.LoginRouteError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -52,8 +52,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun goToDashboard() {
-        //TODO go to Dashboard
-        Logger.debug("Going to dashboard")
+        router.navigate(DashboardRoute())
     }
 
     private suspend fun validateData(
