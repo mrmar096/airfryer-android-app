@@ -61,24 +61,58 @@ class DashboardViewModel @Inject constructor(
         when (event) {
             DashboardContract.Event.Logout -> launch {
                 loginRepository.doLogout()
-                router.navigate(LoginRoute())
+                exitToLogin()
             }
             is DashboardContract.Event.MealSelectionChange -> setState {
                 copy(
                     mealSelected = if (event.meal == state.mealSelected) null else event.meal,
                 )
             }
-            DashboardContract.Event.StartCooking -> setState {
-                copy(deviceStatus = DeviceStatus.COOKING)
+            DashboardContract.Event.StartCooking -> {
+                launch {
+                    state.mealSelected?.let {
+                        setState {
+                            copy(deviceStatus = DeviceStatus.COOKING)
+                        }
+                        deviceRepository.startCooking(it)
+                    }
+                }
             }
-            DashboardContract.Event.StopCooking -> setState {
-                copy(deviceStatus = DeviceStatus.ONLINE)
+            DashboardContract.Event.StopCooking -> launch {
+                if (state.isCooking) {
+                    setState {
+                        copy(deviceStatus = DeviceStatus.ONLINE)
+                    }
+                    deviceRepository.finishCooking()
+                }
             }
         }
     }
 
     private fun handleError(domainError: DomainError) {
-        setState { copy(isLoading = false, error = domainError.getStringResource(resources)) }
+        //TODO handle common error in base
+        when (domainError) {
+            is DomainError.SessionExpired -> exitToLogin()
+            is DomainError.NoConnectionError -> {
+                setState {
+                    copy(
+                        isLoading = false,
+                        error = domainError.getStringResource(resources),
+                        deviceStatus = DeviceStatus.OFFLINE
+                    )
+                }
+            }
+            else -> setState {
+                copy(
+                    isLoading = false,
+                    error = domainError.getStringResource(resources),
+                )
+            }
+        }
+    }
+
+    private fun exitToLogin() {
+        router.navigate(LoginRoute())
     }
 
     private fun launch(invoke: suspend () -> Unit) {
