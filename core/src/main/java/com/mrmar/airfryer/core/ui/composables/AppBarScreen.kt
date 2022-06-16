@@ -15,6 +15,7 @@ import com.mrmar.airfryer.core.ui.theme.Purple700
 @Composable
 fun AppBarScreen(
     title: String,
+    errorMessage: String? = null,
     floatingActionButton: (@Composable () -> Unit)? = null,
     isBackAvailable: Boolean = false,
     onBackPressed: (() -> Unit)? = null,
@@ -42,6 +43,7 @@ fun AppBarScreen(
                     bottom = it.calculateBottomPadding()
                 )
         ) {
+            errorMessage?.let { message -> TopSnackbar(message = message) }
             content()
         }
     }

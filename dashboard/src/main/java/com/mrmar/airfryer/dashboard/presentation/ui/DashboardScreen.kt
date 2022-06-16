@@ -80,13 +80,14 @@ fun DashboardContent(
     }
     AppBarScreen(
         stringResource(R.string.dashboard_title),
+        state.error,
         logoutButton = { onEventSent(DashboardContract.Event.Logout) },
         floatingActionButton = {
             ExpandableProgressFloatingActionButton(
                 cookingText,
                 actionButtonColor,
                 state.isCooking,
-                state.mealSelected != null
+                state.mealSelected != null || state.isCooking
             ) {
                 onEventSent(cookingEvent)
             }
@@ -174,7 +175,12 @@ fun DeviceCardContent(
                 ), 0, 1
             )
         }, style = MaterialTheme.typography.body2)
-        BasicFunctionsChips(meals, selectedMeal, deviceStatus == DeviceStatus.ONLINE, onSelectedChanged)
+        BasicFunctionsChips(
+            meals,
+            selectedMeal,
+            deviceStatus == DeviceStatus.ONLINE,
+            onSelectedChanged
+        )
     }
 }
 
