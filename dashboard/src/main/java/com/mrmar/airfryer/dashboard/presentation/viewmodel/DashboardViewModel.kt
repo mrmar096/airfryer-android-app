@@ -2,19 +2,25 @@ package com.mrmar.airfryer.dashboard.presentation.viewmodel
 
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.mrmar.airfryer.core.presentation.viewmodel.BaseViewModel
 import com.mrmar.airfryer.dashboard.R
 import com.mrmar.airfryer.dashboard.presentation.viewmodel.contract.DashboardContract
 import com.mrmar.airfryer.domain.errors.DomainError
 import com.mrmar.airfryer.domain.models.CookSetup
 import com.mrmar.airfryer.domain.models.Meal
+import com.mrmar.airfryer.domain.repository.exceptions.RepositoryCoroutineHandler
+import com.mrmar.airfryer.domain.repository.login.LoginRepository
+import com.mrmar.airfryer.navigation.routes.LoginRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val resources: Resources,
+    private val loginRepository: LoginRepository,
 ) : BaseViewModel<
         DashboardContract.Event,
         DashboardContract.State,
@@ -44,7 +50,10 @@ class DashboardViewModel @Inject constructor(
 
     override fun handleEvents(event: DashboardContract.Event) {
         when (event) {
-            DashboardContract.Event.Logout -> TODO()
+            DashboardContract.Event.Logout -> viewModelScope.launch(RepositoryCoroutineHandler(::handleError)) {
+                loginRepository.doLogout()
+                router.navigate(LoginRoute())
+            }
             is DashboardContract.Event.MealSelectionChange -> setState {
                 copy(
                     mealSelected = if (event.meal == state.mealSelected) null else event.meal,

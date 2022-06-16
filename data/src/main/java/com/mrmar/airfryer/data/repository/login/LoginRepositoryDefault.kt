@@ -46,7 +46,7 @@ internal class LoginRepositoryDefault @Inject constructor(
     }
 
     override suspend fun handleCodeErrors(code: Int, message: String): Throwable {
-        sessionContextDao.delete()
+        doLogout()
         return super.handleCodeErrors(code, message)
     }
 
@@ -63,5 +63,9 @@ internal class LoginRepositoryDefault @Inject constructor(
                 response.result.token
             )
         )
+    }
+
+    override suspend fun doLogout() {
+        sessionContextDao.delete()
     }
 }

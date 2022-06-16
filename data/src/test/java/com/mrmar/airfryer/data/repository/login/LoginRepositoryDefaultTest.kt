@@ -193,4 +193,12 @@ internal class LoginRepositoryDefaultTest {
             )
         }
     }
+
+    @Test
+    fun doLogout_shouldDeleteSessionContext() {
+        runBlocking {
+            repository.doLogout()
+            verify(sessionContextDao).delete()
+        }
+    }
 }
