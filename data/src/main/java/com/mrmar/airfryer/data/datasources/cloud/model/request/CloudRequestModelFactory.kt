@@ -7,11 +7,10 @@ internal object CloudRequestModelFactory {
         return CloudRequestModel(
             accountID = accountId,
             token = token,
-            method = CloudRequestMethods.Status,
+            method = CloudRequestMethods.Operation,
             traceId = TRACE_ID,
-            deviceList = listOf(
-                CloudRequestDevice(DEVICE_ID)
-            )
+            cid = DEVICE_ID,
+            jsonCmd = CloudRequestCommand.CloudRequestStatusCommand(),
         )
     }
 }

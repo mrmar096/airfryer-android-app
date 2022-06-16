@@ -1,22 +1,24 @@
 package com.mrmar.airfryer.data.repository
 
 import com.mrmar.airfryer.core.utils.Logger
-import com.mrmar.airfryer.domain.repository.exceptions.EndpointNotFoundException
-import com.mrmar.airfryer.domain.repository.exceptions.NoConnectionException
-import com.mrmar.airfryer.domain.repository.exceptions.RepositoryException
-import com.mrmar.airfryer.domain.repository.exceptions.UnknownRepositoryException
+import com.mrmar.airfryer.data.datasources.cloud.model.response.CloudResponseModel
+import com.mrmar.airfryer.data.datasources.local.dao.session.SessionContextDao
+import com.mrmar.airfryer.domain.repository.exceptions.*
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.InetAddress
 
-internal abstract class BaseRepository {
+internal abstract class BaseRepository(val sessionContextDao: SessionContextDao) {
     companion object {
         private const val ERROR_404 = 404
+        private const val SESSION_EXPIRED_CODE = -11001022
     }
 
     suspend fun <T> safe(execution: suspend () -> T): T {
         return try {
-            execution()
+            val result = execution()
+            if (result is CloudResponseModel) checkSessionExpired(result)
+            result
         } catch (ex: Exception) {
             ex.printStackTrace()
             when (ex) {
@@ -37,6 +39,13 @@ internal abstract class BaseRepository {
                 is RepositoryException -> throw ex
                 else -> throw UnknownRepositoryException
             }
+        }
+    }
+
+    private suspend fun checkSessionExpired(result: CloudResponseModel) {
+        if (result.code == SESSION_EXPIRED_CODE) {
+            sessionContextDao.delete()
+            throw SessionExpiredException
         }
     }
 
