@@ -46,7 +46,10 @@ class DashboardViewModel @Inject constructor(
         when (event) {
             DashboardContract.Event.Logout -> TODO()
             is DashboardContract.Event.MealSelectionChange -> setState {
-                copy(mealSelected = if (event.meal == state.mealSelected) null else event.meal)
+                copy(
+                    mealSelected = if (event.meal == state.mealSelected) null else event.meal,
+                    isCooking = false
+                )
             }
             DashboardContract.Event.StartCooking -> setState {
                 copy(isCooking = true)
