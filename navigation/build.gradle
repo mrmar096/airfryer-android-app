@@ -1,6 +1,11 @@
 apply from: "$rootDir/gradle/components/android-module.gradle"
 apply from: "$rootDir/gradle/components/android-testing.gradle"
 
+android {
+    namespace "com.mrmar.airfryer.navigation"
+}
+
+
 dependencies {
     implementation project(':core')
 }
