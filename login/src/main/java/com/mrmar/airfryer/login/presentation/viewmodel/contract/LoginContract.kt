@@ -6,7 +6,7 @@ import com.mrmar.airfryer.core.presentation.viewmodel.components.ViewState
 
 class LoginContract {
     sealed class Event : ViewEvent {
-        object UserLogin : Event()
+        data object UserLogin : Event()
         data class EmailChanged(val email: String) : Event()
         data class PasswordChanged(val password: String) : Event()
     }

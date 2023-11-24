@@ -1,6 +1,10 @@
 apply from: "$rootDir/gradle/components/android-module.gradle"
 apply from: "$rootDir/gradle/components/android-testing.gradle"
 
+android {
+    namespace "com.mrmar.airfryer.dashboard"
+}
+
 dependencies {
     implementation project(':core')
     implementation project(':domain')

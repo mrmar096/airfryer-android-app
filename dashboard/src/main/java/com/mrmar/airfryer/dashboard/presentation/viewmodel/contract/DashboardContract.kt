@@ -8,9 +8,9 @@ import com.mrmar.airfryer.domain.models.Meal
 
 class DashboardContract {
     sealed class Event : ViewEvent {
-        object Logout : Event()
-        object StartCooking : Event()
-        object StopCooking : Event()
+        data object Logout : Event()
+        data object StartCooking : Event()
+        data object StopCooking : Event()
         data class MealSelectionChange(val meal: Meal) : Event()
     }
 
