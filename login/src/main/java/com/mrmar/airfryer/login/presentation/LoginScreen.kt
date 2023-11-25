@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -115,6 +116,8 @@ fun LoginContent(
             )
             Spacer(modifier = Modifier.height(40.dp))
             TextFieldError(
+                modifier = Modifier.testTag("emailField"),
+                modifierError = Modifier.testTag("emailFieldError"),
                 label = { Text(text = stringResource(R.string.email)) },
                 value = state.email.orEmpty(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -127,6 +130,7 @@ fun LoginContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
             TextField(
+                modifier = Modifier.testTag("passwordField"),
                 label = { Text(text = stringResource(R.string.password)) },
                 value = state.password.orEmpty(),
                 visualTransformation = PasswordVisualTransformation(),
@@ -151,6 +155,7 @@ fun LoginContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
+                        .testTag("loginButton")
                 ) {
                     Text(text = stringResource(R.string.login).uppercase())
                 }
@@ -161,7 +166,8 @@ fun LoginContent(
                     Text(
                         text = it,
                         color = MaterialTheme.colors.error,
-                        style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp),
+                        modifier = Modifier.testTag("errorLogin")
                     )
                 }
             }

@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mrmar.airfryer.core.presentation.viewmodel.BaseViewModel
+import com.mrmar.airfryer.core.utils.Logger
 import com.mrmar.airfryer.core.utils.validateEmail
 import com.mrmar.airfryer.domain.errors.DomainError
 import com.mrmar.airfryer.domain.repository.exceptions.RepositoryCoroutineHandler
@@ -34,6 +35,7 @@ class LoginViewModel @Inject constructor(
     override fun handleEvents(event: LoginContract.Event) {
         when (event) {
             is LoginContract.Event.UserLogin -> {
+                Logger.debug("DOLOGINNNNN")
                 viewModelScope.launch(RepositoryCoroutineHandler(::handleError)) {
                     setState { copy(isLoading = true).clearErrors() }
                     validateData(
@@ -46,7 +48,10 @@ class LoginViewModel @Inject constructor(
                     setState { copy(isLoading = false) }
                 }
             }
-            is LoginContract.Event.EmailChanged -> setState { copy(email = event.email).clearErrors() }
+            is LoginContract.Event.EmailChanged ->{
+                Logger.debug("DOCHANGE EMAILL")
+                setState { copy(email = event.email).clearErrors() }
+            }
             is LoginContract.Event.PasswordChanged -> setState { copy(password = event.password).clearErrors() }
         }
     }

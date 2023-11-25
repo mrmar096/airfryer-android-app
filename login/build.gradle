@@ -3,8 +3,12 @@ apply from: "$rootDir/gradle/components/android-testing.gradle"
 
 android {
     namespace "com.mrmar.airfryer.login"
-}
 
+    defaultConfig {
+        testInstrumentationRunner "com.mrmar.airfryer.login.HiltTestRunner"
+    }
+
+}
 
 dependencies {
     implementation project(':core')

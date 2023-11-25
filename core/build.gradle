@@ -25,7 +25,6 @@ dependencies {
     api 'androidx.activity:activity-compose:1.8.1'
     api "androidx.lifecycle:lifecycle-extensions:2.2.0"
     debugApi "androidx.compose.ui:ui-tooling:$compose_version"
-    debugApi "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     //Androidx Navigation
     api "androidx.navigation:navigation-compose:$nav_version"
@@ -35,6 +34,6 @@ dependencies {
     api "com.jakewharton.timber:timber:4.7.1"
 
     //Ui
-    api 'com.airbnb.android:lottie-compose:4.2.2'
+    api 'com.airbnb.android:lottie-compose:6.2.0'
 
 }
