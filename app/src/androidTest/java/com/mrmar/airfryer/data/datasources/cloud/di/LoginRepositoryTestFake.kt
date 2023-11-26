@@ -1,11 +1,12 @@
-package com.mrmar.airfryer.login.di.fake
+package com.mrmar.airfryer.data.datasources.cloud.di
 
+import com.mrmar.airfryer.domain.repository.exceptions.NoSessionDetectedException
 import com.mrmar.airfryer.domain.repository.exceptions.WrongCredentialsException
 import com.mrmar.airfryer.domain.repository.login.LoginRepository
 
 object LoginRepositoryTestFake : LoginRepository {
     override suspend fun checkUserSession() {
-        //Do nothing
+        throw NoSessionDetectedException
     }
 
     override suspend fun doLogin(email: String, password: String) {

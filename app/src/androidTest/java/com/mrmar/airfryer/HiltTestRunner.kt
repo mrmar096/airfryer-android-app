@@ -1,4 +1,4 @@
-package com.mrmar.airfryer.login
+package com.mrmar.airfryer
 
 import android.app.Application
 import android.content.Context

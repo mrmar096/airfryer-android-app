@@ -1,20 +1,25 @@
 package com.mrmar.airfryer.login.presentation
 
-import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.navigation.compose.ComposeNavigator
+import androidx.navigation.compose.NavHost
+import androidx.navigation.testing.TestNavHostController
+import com.mrmar.airfryer.clearAndInput
 import com.mrmar.airfryer.core.ui.theme.AirfryerTheme
-import com.mrmar.airfryer.login.LoginActivity
-import com.mrmar.airfryer.login.clearAndInput
+import com.mrmar.airfryer.dashboard.presentation.route.DashboardRouteGraph
+import com.mrmar.airfryer.login.presentation.route.LoginRouteGraph
+import com.mrmar.airfryer.setContentOnActivity
+import com.mrmar.airfryer.splash.SplashActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalTestApi::class)
 @HiltAndroidTest
 class LoginScreenTest {
 
@@ -22,14 +27,21 @@ class LoginScreenTest {
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeRule = createAndroidComposeRule<LoginActivity>()
+    val composeRule = createAndroidComposeRule<SplashActivity>()
+
+    private lateinit var navController: TestNavHostController
 
     @Before
     fun setUp() {
         hiltRule.inject()
-        composeRule.setContent {
+        composeRule.setContentOnActivity {
             AirfryerTheme {
-                LoginScreen()
+                navController = TestNavHostController(LocalContext.current)
+                navController.navigatorProvider.addNavigator(ComposeNavigator())
+                NavHost(navController, startDestination = LoginRouteGraph.LOGIN) {
+                    LoginRouteGraph.build(this)
+                    DashboardRouteGraph.build(this)
+                }
             }
         }
     }

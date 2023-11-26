@@ -15,11 +15,11 @@ import javax.inject.Singleton
 
 @Module(includes = [ApiModule::class])
 @InstallIn(SingletonComponent::class)
-internal object RepositoryModule {
+object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providesLoginRepository(
+    internal fun providesLoginRepository(
         deviceApi: DeviceApi,
         loginApi: LoginApi,
         dao: SessionContextDao
@@ -29,7 +29,7 @@ internal object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providesDeviceRepository(
+    internal  fun providesDeviceRepository(
         deviceApi: DeviceApi,
         dao: SessionContextDao
     ): DeviceRepository {

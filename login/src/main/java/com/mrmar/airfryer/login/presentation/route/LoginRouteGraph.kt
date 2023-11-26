@@ -10,7 +10,7 @@ import com.mrmar.airfryer.navigation.routes.LoginRouteError
 
 object LoginRouteGraph : RouterGraph {
 
-    private const val LOGIN = "login_graph"
+    const val LOGIN = "login_graph"
 
     override fun build(graphBuilder: NavGraphBuilder) {
         graphBuilder.navigation(startDestination = LoginRoute.URI, LOGIN) {

@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.mrmar.airfryer.AirfyerRouterCompose
 import com.mrmar.airfryer.core.presentation.router.Router
 import com.mrmar.airfryer.core.ui.theme.AirfryerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +22,7 @@ class SplashActivity : ComponentActivity() {
         setContent {
             AirfryerTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AirfyerRouterCompose(router = router)
+                    //AirfyerRouterCompose(router = router)
                 }
             }
         }
